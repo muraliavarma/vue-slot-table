@@ -1,4 +1,10 @@
 # vue-slottable
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18498692.svg)](https://doi.org/10.5281/zenodo.18498692)
+
+Unopinionated VueJS table component with highly customizable scoped slots.
+
+# vue-slottable
 Unopinionated VueJS table component with highly customizable scoped slots.
 
 ## How is this different from other table components?

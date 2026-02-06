@@ -8,6 +8,18 @@ export default defineComponent({
       type: String,
       default: '',
     },
+    align: {
+      type: String,
+      default: '',
+    },
+    width: {
+      type: String,
+      default: '',
+    },
+    minWidth: {
+      type: String,
+      default: '',
+    },
   },
   setup() {
     return () => null

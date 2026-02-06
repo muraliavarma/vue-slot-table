@@ -4,6 +4,7 @@ import { resolve } from 'path'
 
 export default defineConfig(({ mode }) => {
   const config = {
+    base: mode === 'gh-pages' ? '/vue-slot-table/' : '/',
     plugins: [vue()],
     resolve: {
       alias: {

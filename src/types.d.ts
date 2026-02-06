@@ -9,10 +9,18 @@ export interface CellSlotScope<T = any> {
 export interface SlotTableProps {
   rows: any[]
   tableClass?: string
+  rowKey?: string | ((row: any, index: number) => string | number)
+  rowClass?: string | Record<string, boolean> | ((row: any, index: number) => string | Record<string, boolean>)
+  striped?: boolean
+  hoverable?: boolean
+  bordered?: boolean
 }
 
 export interface SlotTableColumnProps {
   sticky?: '' | 'left' | 'right'
+  align?: '' | 'left' | 'center' | 'right'
+  width?: string
+  minWidth?: string
 }
 
 export interface SlotTableColumnGroupProps {

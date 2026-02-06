@@ -1,131 +1,107 @@
 <script>
-import SlotTableColumn from './SlotTableColumn.vue';
-import SlotTableColumnGroup from './SlotTableColumnGroup.vue';
-import SlotTableRow from './SlotTableRow.vue';
-import SlotTableCell from './SlotTableCell.vue';
+import { defineComponent, h } from 'vue'
+import SlotTableColumn from './SlotTableColumn.vue'
+import SlotTableColumnGroup from './SlotTableColumnGroup.vue'
 
-export default {
+export default defineComponent({
   name: 'SlotTable',
-  // functional components are stateless, but very performant
-  functional: true,
   props: {
-    tableClass: {
-      type: String,
-      default: '',
-    },
     rows: {
       type: Array,
       required: true,
     },
+    tableClass: {
+      type: String,
+      default: '',
+    },
   },
-  // since this is a functional component, data is available through a context argument
-  render(createElement, ctx) {
-    if (!ctx.children || ctx.children.length === 0) {
-      throw new Error('Data Table component expects at least one child');
-    }
+  emits: ['row-click'],
+  setup(props, { slots, emit }) {
+    return () => {
+      const children = slots.default ? slots.default() : []
 
-    // initialize data
-    const { rows } = ctx.props;
-    const headers = [];
-    const cells = [];
-    // get all the table listeners
-    let rowClick;
-    if (ctx.data.on) {
-      ({ rowClick } = ctx.data.on);
-    }
-    // loop through column slots and fetch info from each of its children
-    const columns = ctx.children.filter(child => child.data && child.data.slot === 'column');
-    columns.forEach((column, columnIndex) => {
-      // pass everything into the column component
-      const dataTableColumn = createElement(SlotTableColumn, column.data, column.children);
-      // retrieve the header and cell component from the column data
-      const { header } = dataTableColumn.data.props;
+      const columns = []
+      const columnGroups = []
 
-      // header slot should already be ready to be rendered
-      headers.push(header);
+      children.forEach((vnode) => {
+        if (vnode.type === SlotTableColumn) {
+          columns.push(vnode)
+        } else if (vnode.type === SlotTableColumnGroup) {
+          columnGroups.push(vnode)
+        }
+      })
 
-      // we can not render the cell right here since we need row info
-      // thus we retrieve data from the column and store it for later
-      const { data } = dataTableColumn;
-      cells.push({
-        data,
-        columnIndex,
-      });
-    });
+      // Build header cells
+      const headerCells = columns.map((col) => {
+        const colProps = col.props || {}
+        const sticky = colProps.sticky || ''
+        const classes = {
+          'sticky-left': sticky === 'left',
+          'sticky-right': sticky === 'right',
+        }
 
-    // loop through column slots and fetch info from each of its children
-    const groupHeaders = [];
-    const columnGroups = ctx.children.filter(
-      child => child.data && child.data.slot === 'column-group',
-    );
-    columnGroups.forEach((columnGroup) => {
-      // pass all the into the column component
-      const dataTableColumnGroup = createElement(
-        SlotTableColumnGroup, columnGroup.data, columnGroup.children,
-      );
+        const headerSlot = col.children && col.children.header
+        const headerContent = typeof headerSlot === 'function' ? headerSlot() : null
 
-      // retrieve the header component from the column
-      groupHeaders.push(dataTableColumnGroup);
-    });
+        return h('th', { class: classes }, headerContent)
+      })
 
-    // construct the table header
-    const headerRows = [];
-    if (groupHeaders.length > 0) {
-      headerRows.push(createElement(SlotTableRow, {}, groupHeaders));
-    }
-    headerRows.push(createElement(SlotTableRow, {}, headers));
-    const thead = createElement('thead', {}, headerRows);
+      // Build group header row
+      const groupHeaderCells = columnGroups.map((group) => {
+        const groupProps = group.props || {}
+        const sticky = groupProps.sticky || ''
+        const colspan = groupProps.colspan ? Number(groupProps.colspan) : undefined
+        const classes = {
+          'sticky-left': sticky === 'left',
+          'sticky-right': sticky === 'right',
+        }
 
-    // loop through each row
-    const renderedRows = [];
+        const defaultSlot = group.children && group.children.default
+        const content = typeof defaultSlot === 'function' ? defaultSlot() : null
 
-    rows.forEach((row, rowIndex) => {
-      const renderedRow = [];
-      // the cell slot might need row info before it can be rendered
-      cells.forEach(({ data, columnIndex }) => {
-        // pass in the cell and row data for rendering
-        const renderedCell = createElement(SlotTableCell, {
-          props: {
-            data,
-            row,
-            rowIndex,
-            columnIndex,
-          },
-        });
-        // push the cell into the row
-        renderedRow.push(renderedCell);
-      });
+        return h('th', { class: classes, colspan }, content)
+      })
 
-      // pass along the relevant event listener to row
-      let rowOn;
-      if (rowClick) {
-        rowOn = {
-          click: () => rowClick(rowIndex),
-        };
+      // Build thead
+      const headerRows = []
+      if (groupHeaderCells.length > 0) {
+        headerRows.push(h('tr', null, groupHeaderCells))
       }
-      // push the row into the list of rows
-      renderedRows.push(createElement(SlotTableRow, {
-        on: rowOn,
-      }, renderedRow));
-    });
-    // save the list of rows in the tbody
-    const tbody = createElement('tbody', {}, renderedRows);
+      headerRows.push(h('tr', null, headerCells))
+      const thead = h('thead', null, headerRows)
 
-    // finally render out the table with thead, tbody and styles
-    const table = createElement('table', {
-      attrs: {
-        class: ctx.props.tableClass,
-      },
-    }, [thead, tbody]);
+      // Build tbody
+      const bodyRows = props.rows.map((row, rowIndex) => {
+        const cells = columns.map((col, columnIndex) => {
+          const colProps = col.props || {}
+          const sticky = colProps.sticky || ''
+          const classes = {
+            'sticky-left': sticky === 'left',
+            'sticky-right': sticky === 'right',
+          }
 
-    return table;
+          const cellSlot = col.children && col.children.cell
+          const cellContent = typeof cellSlot === 'function'
+            ? cellSlot({ row, rowIndex, columnIndex })
+            : null
+
+          return h('td', { class: classes }, cellContent)
+        })
+
+        return h('tr', {
+          onClick: () => emit('row-click', rowIndex),
+        }, cells)
+      })
+
+      const tbody = h('tbody', null, bodyRows)
+
+      return h('table', { class: props.tableClass }, [thead, tbody])
+    }
   },
-};
-
+})
 </script>
 
-<style lang="css">
-
+<style>
 .sticky-left {
   position: sticky;
   left: 0;
@@ -135,5 +111,4 @@ export default {
   position: sticky;
   right: 0;
 }
-
 </style>

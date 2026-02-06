@@ -1,98 +1,209 @@
 # vue-slottable
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18498692.svg)](https://doi.org/10.5281/zenodo.18498692)
+[![CI](https://github.com/nickvdyck/vue-slot-table/actions/workflows/ci.yml/badge.svg)](https://github.com/nickvdyck/vue-slot-table/actions/workflows/ci.yml)
+[![npm version](https://img.shields.io/npm/v/vue-slottable.svg)](https://www.npmjs.com/package/vue-slottable)
+[![license](https://img.shields.io/npm/l/vue-slottable.svg)](./LICENSE.txt)
 
-Unopinionated VueJS table component with highly customizable scoped slots.
-
-# vue-slottable
-Unopinionated VueJS table component with highly customizable scoped slots.
-
-## How is this different from other table components?
-- Very few table components let you use the power of scoped slots to provide templates for your cells, columns and column headers.
-- This component uses `functional` components, meaning that the implementation is very light-weight / high performance.
-- This is an unopinionated component. No css assumptions have been made when creating this component. You get to choose your own styling for the table.
-- All native table functionalities work as is (transparent wrappers
+A flexible, slot-based Vue 3 table component with sticky columns, column groups, and scoped slots for custom cell rendering.
 
 ## Features
-- Per column templating and styling
-- Column group headers
-- Sticky columns
+
+- **Slot-based columns** — define headers and cells with named slots
+- **Sticky columns** — pin columns to the left or right edge
+- **Column groups** — add grouped header rows with colspan
+- **Row click events** — handle row interactions
+- **Zero CSS opinions** — bring your own styles
+- **Lightweight** — no dependencies beyond Vue 3
+- **TypeScript declarations** included
 
 ## Installation
-`npm install vue-slottable`
 
-## Usage
-There are many different ways of including this component in your project.
-
-### Using inside a Vue Project
-More details can be found inside `src/App.vue`
-``` vue
-<template>
-  <slot-table :rows="rows" table-class="my-table">
-    <template slot="column" class="column-1">
-      <span slot="header">Foo Header</span>
-      <span slot="cell" slot-scope="{ row }">{{row.foo}}</span>
-    </template>
-    <template slot="column" class="column-2">
-      <span slot="header">Bar Header</span>
-      <span slot="cell" slot-scope="{ row }">{{row.bar}}</span>
-    </template>
-  </slot-table>
-</template>
-
-<script>
-import SlotTable from 'vue-slottable';
-export default {
-  name: 'MyComponent',
-  data() {
-    return {
-      rows: [{
-        foo: 'Foo 1',
-        bar: 1,
-      }, {
-        foo: 'Foo 2',
-        bar: 2,
-      }],
-    };
-  },
-};
-</script>
-
-<style>
-.my-table {
-  font-size: 10px;
-}
-
-.column-1 {
-  color: red;
-}
-
-.column-2 {
-  color: blue;
-}
-</style>
+```bash
+npm install vue-slottable
 ```
 
-### Using in Browser
-More details can be found in `dist/demo.html`
+Requires Vue 3.4+.
 
-- Include a script tag `<script src="https://unpkg.com/vue"></script>`
-- Instead of exporting in the `script` tag like above, initialize `new Vue({...}).$mount('#app')`
-- Now you can use the same template as above
+## Quick Start
+
+```vue
+<script setup>
+import { SlotTable, SlotTableColumn } from 'vue-slottable'
+
+const rows = [
+  { name: 'Alice', age: 28 },
+  { name: 'Bob', age: 34 },
+]
+</script>
+
+<template>
+  <SlotTable :rows="rows" table-class="my-table">
+    <SlotTableColumn>
+      <template #header>Name</template>
+      <template #cell="{ row }">{{ row.name }}</template>
+    </SlotTableColumn>
+
+    <SlotTableColumn>
+      <template #header>Age</template>
+      <template #cell="{ row }">{{ row.age }}</template>
+    </SlotTableColumn>
+  </SlotTable>
+</template>
+```
+
+## API Reference
+
+### `<SlotTable>`
+
+The main table component. Renders a `<table>` element.
+
+#### Props
+
+| Prop | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `rows` | `Array` | Yes | — | Array of row data objects |
+| `table-class` | `String` | No | `''` | CSS class applied to the `<table>` element |
+
+#### Events
+
+| Event | Payload | Description |
+|-------|---------|-------------|
+| `row-click` | `rowIndex: number` | Emitted when a table row is clicked |
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `default` | Accepts `<SlotTableColumn>` and `<SlotTableColumnGroup>` children |
+
+---
+
+### `<SlotTableColumn>`
+
+Defines a single table column. This is a renderless component — it must be a direct child of `<SlotTable>`.
+
+#### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `sticky` | `String` | `''` | Set to `'left'` or `'right'` to make the column sticky |
+
+#### Slots
+
+| Slot | Scope | Description |
+|------|-------|-------------|
+| `header` | — | Content for the column's `<th>` |
+| `cell` | `{ row, rowIndex, columnIndex }` | Content for each `<td>` in this column |
+
+---
+
+### `<SlotTableColumnGroup>`
+
+Defines a grouped header row entry. Must be a direct child of `<SlotTable>`.
+
+#### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `sticky` | `String` | `''` | Set to `'left'` or `'right'` for sticky positioning |
+| `colspan` | `Number` | — | Number of columns this group header spans |
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `default` | Content for the group `<th>` |
+
+## Examples
+
+### Sticky Columns
+
+```vue
+<SlotTable :rows="rows">
+  <SlotTableColumn sticky="left">
+    <template #header>ID</template>
+    <template #cell="{ row }">{{ row.id }}</template>
+  </SlotTableColumn>
+
+  <SlotTableColumn>
+    <template #header>Description</template>
+    <template #cell="{ row }">{{ row.description }}</template>
+  </SlotTableColumn>
+
+  <SlotTableColumn sticky="right">
+    <template #header>Actions</template>
+    <template #cell="{ row }">
+      <button @click.stop="edit(row)">Edit</button>
+    </template>
+  </SlotTableColumn>
+</SlotTable>
+```
+
+### Column Groups
+
+```vue
+<SlotTable :rows="rows">
+  <SlotTableColumnGroup :colspan="2">Personal</SlotTableColumnGroup>
+  <SlotTableColumnGroup :colspan="1">Work</SlotTableColumnGroup>
+
+  <SlotTableColumn>
+    <template #header>Name</template>
+    <template #cell="{ row }">{{ row.name }}</template>
+  </SlotTableColumn>
+
+  <SlotTableColumn>
+    <template #header>Age</template>
+    <template #cell="{ row }">{{ row.age }}</template>
+  </SlotTableColumn>
+
+  <SlotTableColumn>
+    <template #header>Role</template>
+    <template #cell="{ row }">{{ row.role }}</template>
+  </SlotTableColumn>
+</SlotTable>
+```
+
+### Row Click Events
+
+```vue
+<script setup>
+function onRowClick(rowIndex) {
+  console.log('Clicked row:', rowIndex)
+}
+</script>
+
+<template>
+  <SlotTable :rows="rows" @row-click="onRowClick">
+    <!-- columns... -->
+  </SlotTable>
+</template>
+```
+
+### Custom Cell Rendering
+
+```vue
+<SlotTableColumn>
+  <template #header>Status</template>
+  <template #cell="{ row }">
+    <span :class="'badge-' + row.status">{{ row.status }}</span>
+  </template>
+</SlotTableColumn>
+```
+
+## Development
+
+```bash
+npm install
+npm run dev       # Start dev server with demo app
+npm test          # Run tests
+npm run lint      # Lint
+npm run build:lib # Build library bundles
+```
 
 ## Contributing
 
-Before contributing, make sure that all the below prerequisites are complete:
+See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
-### Prerequisites
-- Install `npm` from https://www.npmjs.com/get-npm
-- This project was created with the Vue CLI 3. Install it using `npm install -g @vue/cli`
-- Now you can `cd` into the root directory and `npm install`
+## License
 
-### Testing and Linting
-Jest is the unit testing framework used in this project. Run it using `npm run test:unit`
-
-ESLint + AirBNB convention is used for linting. Run with `npm run lint`
-
-### Building
-Building the various targets with `npm run build`
+[MIT](./LICENSE.txt)

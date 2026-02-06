@@ -1,35 +1,62 @@
 {
   "name": "vue-slottable",
-  "version": "0.1.0",
-  "main": "./dist/slot-table.common.js",
-  "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --target lib --name slotTable ./src/components/SlotTable.vue",
-    "lint": "vue-cli-service lint",
-    "test:unit": "vue-cli-service test:unit"
+  "version": "1.0.0",
+  "description": "A flexible, slot-based Vue 3 table component with sticky columns, column groups, and scoped slots for custom cell rendering.",
+  "main": "./dist/vue-slottable.umd.js",
+  "module": "./dist/vue-slottable.mjs",
+  "types": "./src/types.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/vue-slottable.mjs",
+      "require": "./dist/vue-slottable.umd.js"
+    }
   },
   "files": [
-    "dist/*",
-    "src/*",
-    "public/*",
-    "*.json",
-    "*.js"
+    "dist",
+    "src"
   ],
-  "dependencies": {
-    "vue": "^2.5.21"
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:lib": "vite build --mode lib",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src/ tests/",
+    "lint:fix": "eslint src/ tests/ --fix"
+  },
+  "peerDependencies": {
+    "vue": "^3.4.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.0.0",
-    "@vue/cli-plugin-eslint": "^3.0.0",
-    "@vue/cli-plugin-unit-jest": "^3.0.0",
-    "@vue/cli-service": "^3.0.0",
-    "@vue/eslint-config-airbnb": "^4.0.0",
-    "@vue/test-utils": "^1.0.0-beta.20",
-    "babel-core": "7.0.0-bridge.0",
-    "babel-eslint": "^10.0.1",
-    "babel-jest": "^23.6.0",
-    "eslint": "^5.8.0",
-    "eslint-plugin-vue": "^5.0.0",
-    "vue-template-compiler": "^2.5.21"
+    "@vitejs/plugin-vue": "^5.1.0",
+    "@vue/test-utils": "^2.4.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-vue": "^9.27.0",
+    "jsdom": "^24.1.0",
+    "vite": "^5.4.0",
+    "vitest": "^2.0.0",
+    "vue": "^3.4.0"
+  },
+  "keywords": [
+    "vue",
+    "vue3",
+    "table",
+    "slot-table",
+    "slots",
+    "scoped-slots",
+    "sticky-columns",
+    "column-groups",
+    "data-table",
+    "component"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nickvdyck/vue-slot-table.git"
+  },
+  "homepage": "https://github.com/nickvdyck/vue-slot-table#readme",
+  "bugs": {
+    "url": "https://github.com/nickvdyck/vue-slot-table/issues"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "vue-slottable",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A flexible, slot-based Vue 3 table component with sticky columns, column groups, and scoped slots for custom cell rendering.",
   "main": "./dist/vue-slottable.umd.js",
   "module": "./dist/vue-slottable.mjs",

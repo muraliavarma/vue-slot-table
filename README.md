@@ -1,6 +1,6 @@
 # vue-slottable
 
-[![CI](https://github.com/nickvdyck/vue-slot-table/actions/workflows/ci.yml/badge.svg)](https://github.com/nickvdyck/vue-slot-table/actions/workflows/ci.yml)
+[![CI](https://github.com/muraliavarma/vue-slot-table/actions/workflows/ci.yml/badge.svg)](https://github.com/muraliavarma/vue-slot-table/actions/workflows/ci.yml)
 [![npm version](https://img.shields.io/npm/v/vue-slottable.svg)](https://www.npmjs.com/package/vue-slottable)
 [![license](https://img.shields.io/npm/l/vue-slottable.svg)](./LICENSE.txt)
 

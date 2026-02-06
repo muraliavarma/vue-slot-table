@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/muraliavarma/vue-slot-table/actions/workflows/ci.yml/badge.svg)](https://github.com/muraliavarma/vue-slot-table/actions/workflows/ci.yml)
 [![npm version](https://img.shields.io/npm/v/vue-slottable.svg)](https://www.npmjs.com/package/vue-slottable)
-[![license](https://img.shields.io/npm/l/vue-slottable.svg)](./LICENSE.txt)
+[![license](https://img.shields.io/github/license/muraliavarma/vue-slot-table.svg)](./LICENSE)
 
 A flexible, slot-based table component for Vue 3. Define columns with scoped slots, add sticky columns, column groups, sorting, and more — with zero CSS opinions.
 
@@ -297,4 +297,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## License
 
-[MIT](./LICENSE.txt)
+[MIT](./LICENSE)

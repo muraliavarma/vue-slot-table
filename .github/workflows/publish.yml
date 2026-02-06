@@ -16,8 +16,9 @@ jobs:
         with:
           node-version: 18
           cache: npm
-          registry-url: https://registry.npmjs.org
       - run: npm ci
       - run: npm run build:lib
       - run: npm test
-      - run: npm publish --provenance
+      - run: npm publish --provenance --access public
+        env:
+          NPM_CONFIG_REGISTRY: https://registry.npmjs.org

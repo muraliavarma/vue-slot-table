@@ -14,6 +14,9 @@ export interface SlotTableProps {
   striped?: boolean
   hoverable?: boolean
   bordered?: boolean
+  loading?: boolean
+  stickyHeader?: boolean
+  caption?: string
 }
 
 export interface SlotTableColumnProps {
@@ -21,6 +24,9 @@ export interface SlotTableColumnProps {
   align?: '' | 'left' | 'center' | 'right'
   width?: string
   minWidth?: string
+  visible?: boolean
+  tdClass?: string | Record<string, boolean>
+  thClass?: string | Record<string, boolean>
 }
 
 export interface SlotTableColumnGroupProps {

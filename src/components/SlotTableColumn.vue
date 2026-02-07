@@ -20,6 +20,18 @@ export default defineComponent({
       type: String,
       default: '',
     },
+    visible: {
+      type: Boolean,
+      default: true,
+    },
+    tdClass: {
+      type: [String, Object],
+      default: undefined,
+    },
+    thClass: {
+      type: [String, Object],
+      default: undefined,
+    },
   },
   setup() {
     return () => null

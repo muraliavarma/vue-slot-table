@@ -19,12 +19,20 @@ function createTable(options = {}) {
     align = {},
     width = {},
     minWidth = {},
+    visible = {},
+    tdClass = {},
+    thClass = {},
+    footer = {},
     rowKey,
     rowClass,
     striped,
     hoverable,
     bordered,
+    loading,
+    stickyHeader,
+    caption,
     emptySlot,
+    loadingSlot,
   } = options
 
   const props = { rows }
@@ -34,6 +42,9 @@ function createTable(options = {}) {
   if (striped) props.striped = striped
   if (hoverable) props.hoverable = hoverable
   if (bordered) props.bordered = bordered
+  if (loading !== undefined) props.loading = loading
+  if (stickyHeader) props.stickyHeader = stickyHeader
+  if (caption) props.caption = caption
 
   const slots = {
     default: () => [
@@ -43,22 +54,33 @@ function createTable(options = {}) {
           colspan: group.colspan,
         }, { default: () => group.label })
       ),
-      ...columns.map((col, i) =>
-        h(SlotTableColumn, {
+      ...columns.map((col, i) => {
+        const colProps = {
           sticky: sticky[i],
           align: align[i],
           width: width[i],
           minWidth: minWidth[i],
-        }, {
+        }
+        if (visible[i] !== undefined) colProps.visible = visible[i]
+        if (tdClass[i]) colProps.tdClass = tdClass[i]
+        if (thClass[i]) colProps.thClass = thClass[i]
+
+        const colSlots = {
           header: () => col.header,
           cell: (scope) => col.cell(scope),
-        })
-      ),
+        }
+        if (footer[i]) colSlots.footer = () => footer[i]
+
+        return h(SlotTableColumn, colProps, colSlots)
+      }),
     ],
   }
 
   if (emptySlot) {
     slots.empty = () => emptySlot
+  }
+  if (loadingSlot) {
+    slots.loading = () => loadingSlot
   }
 
   return mount(SlotTable, { props, slots })
@@ -233,5 +255,133 @@ describe('SlotTable', () => {
     })
     expect(wrapper.findAll('thead th')[0].attributes('style')).toContain('width: 100px')
     expect(wrapper.findAll('thead th')[1].attributes('style')).toContain('min-width: 200px')
+  })
+
+  // ── visible prop ──────────────────────────────────
+  it('hides columns when visible is false', () => {
+    const wrapper = createTable({
+      visible: { 1: false },
+    })
+    expect(wrapper.findAll('thead th')).toHaveLength(1)
+    expect(wrapper.findAll('thead th')[0].text()).toBe('Name')
+    expect(wrapper.findAll('tbody tr:first-child td')).toHaveLength(1)
+  })
+
+  it('shows columns when visible is true (explicit)', () => {
+    const wrapper = createTable({
+      visible: { 0: true, 1: true },
+    })
+    expect(wrapper.findAll('thead th')).toHaveLength(2)
+  })
+
+  // ── footer slot ───────────────────────────────────
+  it('renders tfoot when columns have footer slots', () => {
+    const wrapper = createTable({
+      footer: { 0: 'Total', 1: '62' },
+    })
+    const tfoot = wrapper.find('tfoot')
+    expect(tfoot.exists()).toBe(true)
+    const footerCells = tfoot.findAll('td')
+    expect(footerCells).toHaveLength(2)
+    expect(footerCells[0].text()).toBe('Total')
+    expect(footerCells[1].text()).toBe('62')
+  })
+
+  it('does not render tfoot when no footer slots are provided', () => {
+    const wrapper = createTable()
+    expect(wrapper.find('tfoot').exists()).toBe(false)
+  })
+
+  // ── loading prop + slot ───────────────────────────
+  it('renders loading slot when loading is true', () => {
+    const wrapper = createTable({
+      loading: true,
+      loadingSlot: 'Loading...',
+    })
+    const loadingTd = wrapper.find('tbody td')
+    expect(loadingTd.exists()).toBe(true)
+    expect(loadingTd.text()).toBe('Loading...')
+    expect(loadingTd.classes()).toContain('slot-table-loading')
+    expect(loadingTd.attributes('colspan')).toBe('2')
+  })
+
+  it('renders rows normally when loading is false', () => {
+    const wrapper = createTable({
+      loading: false,
+      loadingSlot: 'Loading...',
+    })
+    expect(wrapper.find('.slot-table-loading').exists()).toBe(false)
+    expect(wrapper.findAll('tbody tr')).toHaveLength(2)
+  })
+
+  it('loading takes priority over empty', () => {
+    const wrapper = createTable({
+      rows: [],
+      loading: true,
+      loadingSlot: 'Loading...',
+      emptySlot: 'No data',
+    })
+    expect(wrapper.find('.slot-table-loading').exists()).toBe(true)
+    expect(wrapper.find('.slot-table-empty').exists()).toBe(false)
+  })
+
+  // ── stickyHeader prop ─────────────────────────────
+  it('adds sticky-header class to thead when stickyHeader is true', () => {
+    const wrapper = createTable({ stickyHeader: true })
+    expect(wrapper.find('thead').classes()).toContain('slot-table-sticky-header')
+  })
+
+  it('does not add sticky-header class by default', () => {
+    const wrapper = createTable()
+    expect(wrapper.find('thead').classes()).not.toContain('slot-table-sticky-header')
+  })
+
+  // ── caption prop ──────────────────────────────────
+  it('renders a caption element when caption prop is set', () => {
+    const wrapper = createTable({ caption: 'Employee Directory' })
+    const caption = wrapper.find('caption')
+    expect(caption.exists()).toBe(true)
+    expect(caption.text()).toBe('Employee Directory')
+    expect(caption.classes()).toContain('slot-table-caption')
+  })
+
+  it('does not render caption when prop is empty', () => {
+    const wrapper = createTable()
+    expect(wrapper.find('caption').exists()).toBe(false)
+  })
+
+  // ── cell-click event ──────────────────────────────
+  it('emits cell-click with rowIndex, columnIndex, and row when a cell is clicked', async () => {
+    const wrapper = createTable()
+    await wrapper.findAll('tbody td')[1].trigger('click')
+    expect(wrapper.emitted('cell-click')).toBeTruthy()
+    expect(wrapper.emitted('cell-click')[0]).toEqual([0, 1, { id: 1, name: 'Alice', age: 28 }])
+  })
+
+  // ── tdClass and thClass props ─────────────────────
+  it('applies thClass to header cells', () => {
+    const wrapper = createTable({
+      thClass: { 0: 'custom-th' },
+    })
+    expect(wrapper.findAll('thead th')[0].classes()).toContain('custom-th')
+    expect(wrapper.findAll('thead th')[1].classes()).not.toContain('custom-th')
+  })
+
+  it('applies tdClass to body cells', () => {
+    const wrapper = createTable({
+      tdClass: { 0: 'custom-td' },
+    })
+    const firstRowCells = wrapper.findAll('tbody tr:first-child td')
+    expect(firstRowCells[0].classes()).toContain('custom-td')
+    expect(firstRowCells[1].classes()).not.toContain('custom-td')
+  })
+
+  it('applies tdClass as an object to body cells', () => {
+    const wrapper = createTable({
+      tdClass: { 0: { 'highlight': true, 'dimmed': false } },
+    })
+    const firstCell = wrapper.findAll('tbody tr:first-child td')[0]
+    expect(firstCell.classes()).toContain('highlight')
+    expect(firstCell.classes()).not.toContain('dimmed')
   })
 })

@@ -34,8 +34,20 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    loading: {
+      type: Boolean,
+      default: false,
+    },
+    stickyHeader: {
+      type: Boolean,
+      default: false,
+    },
+    caption: {
+      type: String,
+      default: '',
+    },
   },
-  emits: ['row-click', 'header-click'],
+  emits: ['row-click', 'header-click', 'cell-click'],
   setup(props, { slots, emit }) {
     function getColumnStyle(colProps) {
       const style = {}
@@ -56,6 +68,14 @@ export default defineComponent({
         'align-center': align === 'center',
         'align-right': align === 'right',
       }
+    }
+
+    function mergeClasses(baseClasses, extraClass) {
+      if (!extraClass) return baseClasses
+      if (typeof extraClass === 'string') {
+        return { ...baseClasses, [extraClass]: true }
+      }
+      return { ...baseClasses, ...extraClass }
     }
 
     function getRowKey(row, rowIndex) {
@@ -88,24 +108,42 @@ export default defineComponent({
       return classes
     }
 
+    function isColumnVisible(colProps) {
+      // visible can be a boolean prop — default true
+      // When using kebab-case in template, Vue normalizes to camelCase
+      const vis = colProps.visible
+      // If not specified, default to visible
+      if (vis === undefined || vis === '' || vis === true) return true
+      return !!vis
+    }
+
     return () => {
       const children = slots.default ? slots.default() : []
 
-      const columns = []
+      const allColumns = []
       const columnGroups = []
 
       children.forEach((vnode) => {
         if (vnode.type === SlotTableColumn) {
-          columns.push(vnode)
+          allColumns.push(vnode)
         } else if (vnode.type === SlotTableColumnGroup) {
           columnGroups.push(vnode)
         }
       })
 
+      // Filter to visible columns only
+      const columns = allColumns.filter((col) => isColumnVisible(col.props || {}))
+
+      // Build caption
+      const captionEl = props.caption
+        ? h('caption', { class: 'slot-table-caption' }, props.caption)
+        : null
+
       // Build header cells
       const headerCells = columns.map((col, columnIndex) => {
         const colProps = col.props || {}
-        const classes = getColumnClasses(colProps)
+        const baseClasses = getColumnClasses(colProps)
+        const classes = mergeClasses(baseClasses, colProps.thClass || colProps['th-class'])
         const style = getColumnStyle(colProps)
 
         const headerSlot = col.children && col.children.header
@@ -140,11 +178,17 @@ export default defineComponent({
         headerRows.push(h('tr', null, groupHeaderCells))
       }
       headerRows.push(h('tr', null, headerCells))
-      const thead = h('thead', null, headerRows)
+      const theadClasses = props.stickyHeader ? { 'slot-table-sticky-header': true } : undefined
+      const thead = h('thead', { class: theadClasses }, headerRows)
 
-      // Build tbody — handle empty state
+      // Build tbody — handle empty/loading states
       let tbody
-      if (props.rows.length === 0 && slots.empty) {
+      if (props.loading && slots.loading) {
+        const loadingRow = h('tr', null, [
+          h('td', { colspan: columns.length, class: 'slot-table-loading' }, slots.loading()),
+        ])
+        tbody = h('tbody', null, [loadingRow])
+      } else if (props.rows.length === 0 && slots.empty) {
         const emptyRow = h('tr', null, [
           h('td', { colspan: columns.length, class: 'slot-table-empty' }, slots.empty()),
         ])
@@ -153,7 +197,8 @@ export default defineComponent({
         const bodyRows = props.rows.map((row, rowIndex) => {
           const cells = columns.map((col, columnIndex) => {
             const colProps = col.props || {}
-            const classes = getColumnClasses(colProps)
+            const baseClasses = getColumnClasses(colProps)
+            const classes = mergeClasses(baseClasses, colProps.tdClass || colProps['td-class'])
             const style = getColumnStyle(colProps)
 
             const cellSlot = col.children && col.children.cell
@@ -161,7 +206,11 @@ export default defineComponent({
               ? cellSlot({ row, rowIndex, columnIndex })
               : null
 
-            return h('td', { class: classes, style }, cellContent)
+            return h('td', {
+              class: classes,
+              style,
+              onClick: () => emit('cell-click', rowIndex, columnIndex, row),
+            }, cellContent)
           })
 
           return h('tr', {
@@ -174,12 +223,34 @@ export default defineComponent({
         tbody = h('tbody', null, bodyRows)
       }
 
+      // Build tfoot from column #footer slots
+      const footerCells = columns.map((col, columnIndex) => {
+        const colProps = col.props || {}
+        const baseClasses = getColumnClasses(colProps)
+        const classes = mergeClasses(baseClasses, colProps.tdClass || colProps['td-class'])
+        const style = getColumnStyle(colProps)
+
+        const footerSlot = col.children && col.children.footer
+        const footerContent = typeof footerSlot === 'function' ? footerSlot() : null
+
+        return h('td', { class: classes, style }, footerContent)
+      })
+
+      const hasFooter = footerCells.some((cell) => {
+        // Check if any footer cell has content
+        return cell.children !== null
+      })
+      const tfoot = hasFooter
+        ? h('tfoot', null, [h('tr', null, footerCells)])
+        : null
+
       const tableClasses = {
         [props.tableClass]: !!props.tableClass,
         'slot-table-bordered': props.bordered,
       }
 
-      return h('table', { class: tableClasses }, [thead, tbody])
+      const tableChildren = [captionEl, thead, tbody, tfoot].filter(Boolean)
+      return h('table', { class: tableClasses }, tableChildren)
     }
   },
 })
@@ -201,4 +272,15 @@ export default defineComponent({
 .align-left { text-align: left; }
 .align-center { text-align: center; }
 .align-right { text-align: right; }
+
+.slot-table-sticky-header th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.slot-table-sticky-header .sticky-left,
+.slot-table-sticky-header .sticky-right {
+  z-index: 3;
+}
 </style>

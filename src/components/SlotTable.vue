@@ -1,13 +1,17 @@
-<script>
-import { defineComponent, h } from 'vue'
+<script lang="ts">
+import { defineComponent, h, type VNode, type PropType } from 'vue'
 import SlotTableColumn from './SlotTableColumn.vue'
 import SlotTableColumnGroup from './SlotTableColumnGroup.vue'
+
+interface ColumnClasses {
+  [key: string]: boolean
+}
 
 export default defineComponent({
   name: 'SlotTable',
   props: {
     rows: {
-      type: Array,
+      type: Array as PropType<any[]>,
       required: true,
     },
     tableClass: {
@@ -15,11 +19,11 @@ export default defineComponent({
       default: '',
     },
     rowKey: {
-      type: [String, Function],
+      type: [String, Function] as PropType<string | ((row: any, index: number) => string | number)>,
       default: undefined,
     },
     rowClass: {
-      type: [String, Object, Function],
+      type: [String, Object, Function] as PropType<string | Record<string, boolean> | ((row: any, index: number) => string | Record<string, boolean>)>,
       default: undefined,
     },
     striped: {
@@ -49,8 +53,8 @@ export default defineComponent({
   },
   emits: ['row-click', 'header-click', 'cell-click'],
   setup(props, { slots, emit }) {
-    function getColumnStyle(colProps) {
-      const style = {}
+    function getColumnStyle(colProps: Record<string, any>): Record<string, string> | undefined {
+      const style: Record<string, string> = {}
       if (colProps.width) style.width = colProps.width
       if (colProps['min-width'] || colProps.minWidth) {
         style.minWidth = colProps['min-width'] || colProps.minWidth
@@ -58,7 +62,7 @@ export default defineComponent({
       return Object.keys(style).length > 0 ? style : undefined
     }
 
-    function getColumnClasses(colProps) {
+    function getColumnClasses(colProps: Record<string, any>): ColumnClasses {
       const sticky = colProps.sticky || ''
       const align = colProps.align || ''
       return {
@@ -70,7 +74,7 @@ export default defineComponent({
       }
     }
 
-    function mergeClasses(baseClasses, extraClass) {
+    function mergeClasses(baseClasses: ColumnClasses, extraClass: string | Record<string, boolean> | undefined): ColumnClasses {
       if (!extraClass) return baseClasses
       if (typeof extraClass === 'string') {
         return { ...baseClasses, [extraClass]: true }
@@ -78,14 +82,14 @@ export default defineComponent({
       return { ...baseClasses, ...extraClass }
     }
 
-    function getRowKey(row, rowIndex) {
+    function getRowKey(row: any, rowIndex: number): string | number {
       if (!props.rowKey) return rowIndex
       if (typeof props.rowKey === 'function') return props.rowKey(row, rowIndex)
       return row[props.rowKey]
     }
 
-    function getRowClass(row, rowIndex) {
-      const classes = {}
+    function getRowClass(row: any, rowIndex: number): ColumnClasses {
+      const classes: ColumnClasses = {}
       if (props.striped && rowIndex % 2 === 1) {
         classes['slot-table-striped'] = true
       }
@@ -108,7 +112,7 @@ export default defineComponent({
       return classes
     }
 
-    function isColumnVisible(colProps) {
+    function isColumnVisible(colProps: Record<string, any>): boolean {
       // visible can be a boolean prop — default true
       // When using kebab-case in template, Vue normalizes to camelCase
       const vis = colProps.visible
@@ -118,10 +122,10 @@ export default defineComponent({
     }
 
     return () => {
-      const children = slots.default ? slots.default() : []
+      const children: VNode[] = slots.default ? slots.default() : []
 
-      const allColumns = []
-      const columnGroups = []
+      const allColumns: VNode[] = []
+      const columnGroups: VNode[] = []
 
       children.forEach((vnode) => {
         if (vnode.type === SlotTableColumn) {
@@ -146,7 +150,7 @@ export default defineComponent({
         const classes = mergeClasses(baseClasses, colProps.thClass || colProps['th-class'])
         const style = getColumnStyle(colProps)
 
-        const headerSlot = col.children && col.children.header
+        const headerSlot = col.children && (col.children as any).header
         const headerContent = typeof headerSlot === 'function' ? headerSlot() : null
 
         return h('th', {
@@ -166,14 +170,14 @@ export default defineComponent({
           'sticky-right': sticky === 'right',
         }
 
-        const defaultSlot = group.children && group.children.default
+        const defaultSlot = group.children && (group.children as any).default
         const content = typeof defaultSlot === 'function' ? defaultSlot() : null
 
         return h('th', { class: classes, colspan }, content)
       })
 
       // Build thead
-      const headerRows = []
+      const headerRows: VNode[] = []
       if (groupHeaderCells.length > 0) {
         headerRows.push(h('tr', null, groupHeaderCells))
       }
@@ -182,7 +186,7 @@ export default defineComponent({
       const thead = h('thead', { class: theadClasses }, headerRows)
 
       // Build tbody — handle empty/loading states
-      let tbody
+      let tbody: VNode
       if (props.loading && slots.loading) {
         const loadingRow = h('tr', null, [
           h('td', { colspan: columns.length, class: 'slot-table-loading' }, slots.loading()),
@@ -201,7 +205,7 @@ export default defineComponent({
             const classes = mergeClasses(baseClasses, colProps.tdClass || colProps['td-class'])
             const style = getColumnStyle(colProps)
 
-            const cellSlot = col.children && col.children.cell
+            const cellSlot = col.children && (col.children as any).cell
             const cellContent = typeof cellSlot === 'function'
               ? cellSlot({ row, rowIndex, columnIndex })
               : null
@@ -224,13 +228,13 @@ export default defineComponent({
       }
 
       // Build tfoot from column #footer slots
-      const footerCells = columns.map((col, columnIndex) => {
+      const footerCells = columns.map((col) => {
         const colProps = col.props || {}
         const baseClasses = getColumnClasses(colProps)
         const classes = mergeClasses(baseClasses, colProps.tdClass || colProps['td-class'])
         const style = getColumnStyle(colProps)
 
-        const footerSlot = col.children && col.children.footer
+        const footerSlot = col.children && (col.children as any).footer
         const footerContent = typeof footerSlot === 'function' ? footerSlot() : null
 
         return h('td', { class: classes, style }, footerContent)
@@ -244,7 +248,7 @@ export default defineComponent({
         ? h('tfoot', null, [h('tr', null, footerCells)])
         : null
 
-      const tableClasses = {
+      const tableClasses: ColumnClasses = {
         [props.tableClass]: !!props.tableClass,
         'slot-table-bordered': props.bordered,
       }

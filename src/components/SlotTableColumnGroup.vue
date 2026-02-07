@@ -1,11 +1,11 @@
-<script>
-import { defineComponent } from 'vue'
+<script lang="ts">
+import { defineComponent, type PropType } from 'vue'
 
 export default defineComponent({
   name: 'SlotTableColumnGroup',
   props: {
     sticky: {
-      type: String,
+      type: String as PropType<'' | 'left' | 'right'>,
       default: '',
     },
     colspan: {

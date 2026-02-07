@@ -1,9 +1,17 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { h } from 'vue'
-import { SlotTable, SlotTableColumn } from '@/index.js'
+import { SlotTable, SlotTableColumn } from '@/index'
 
-function createTableWithColumns(columnConfigs) {
+interface ColumnConfig {
+  header: string
+  sticky?: string
+  align?: string
+  width?: string
+  minWidth?: string
+}
+
+function createTableWithColumns(columnConfigs: ColumnConfig[]) {
   return mount(SlotTable, {
     props: {
       rows: [{ val: 'test' }],
@@ -16,9 +24,9 @@ function createTableWithColumns(columnConfigs) {
             align: col.align,
             width: col.width,
             minWidth: col.minWidth,
-          }, {
+          } as any, {
             header: () => col.header,
-            cell: ({ row }) => row.val,
+            cell: ({ row }: { row: any }) => row.val,
           })
         ),
     },

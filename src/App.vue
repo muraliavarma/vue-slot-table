@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { SlotTable, SlotTableColumn, SlotTableColumnGroup } from './index.js'
+import { SlotTable, SlotTableColumn, SlotTableColumnGroup } from './index'
 
 // ── Dark mode ────────────────────────────────────────
 const darkMode = ref(
@@ -534,28 +534,127 @@ const code = {
 
 <template>
   <!-- Mobile menu toggle -->
-  <button class="menu-toggle" @click="sidebarOpen = !sidebarOpen" aria-label="Toggle menu">
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-      <rect y="3" width="20" height="2" rx="1" />
-      <rect y="9" width="20" height="2" rx="1" />
-      <rect y="15" width="20" height="2" rx="1" />
+  <button
+    class="menu-toggle"
+    aria-label="Toggle menu"
+    @click="sidebarOpen = !sidebarOpen"
+  >
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="currentColor"
+    >
+      <rect
+        y="3"
+        width="20"
+        height="2"
+        rx="1"
+      />
+      <rect
+        y="9"
+        width="20"
+        height="2"
+        rx="1"
+      />
+      <rect
+        y="15"
+        width="20"
+        height="2"
+        rx="1"
+      />
     </svg>
   </button>
 
   <!-- Overlay -->
-  <div v-if="sidebarOpen" class="sidebar-overlay" @click="sidebarOpen = false" />
+  <div
+    v-if="sidebarOpen"
+    class="sidebar-overlay"
+    @click="sidebarOpen = false"
+  />
 
   <!-- Sidebar -->
-  <aside class="sidebar" :class="{ open: sidebarOpen }">
+  <aside
+    class="sidebar"
+    :class="{ open: sidebarOpen }"
+  >
     <div class="sidebar-header">
       <div class="sidebar-header-top">
-        <a href="#hero" @click="navClick" class="sidebar-brand">vue-slottable</a>
-        <button class="dark-toggle" @click="toggleDark" :aria-label="darkMode ? 'Switch to light mode' : 'Switch to dark mode'">
-          <svg v-if="!darkMode" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <a
+          href="#hero"
+          class="sidebar-brand"
+          @click="navClick"
+        >vue-slottable</a>
+        <button
+          class="dark-toggle"
+          :aria-label="darkMode ? 'Switch to light mode' : 'Switch to dark mode'"
+          @click="toggleDark"
+        >
+          <svg
+            v-if="!darkMode"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
           </svg>
-          <svg v-else width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" /><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" /><line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" /><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+          <svg
+            v-else
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="5"
+            /><line
+              x1="12"
+              y1="1"
+              x2="12"
+              y2="3"
+            /><line
+              x1="12"
+              y1="21"
+              x2="12"
+              y2="23"
+            /><line
+              x1="4.22"
+              y1="4.22"
+              x2="5.64"
+              y2="5.64"
+            /><line
+              x1="18.36"
+              y1="18.36"
+              x2="19.78"
+              y2="19.78"
+            /><line
+              x1="1"
+              y1="12"
+              x2="3"
+              y2="12"
+            /><line
+              x1="21"
+              y1="12"
+              x2="23"
+              y2="12"
+            /><line
+              x1="4.22"
+              y1="19.78"
+              x2="5.64"
+              y2="18.36"
+            /><line
+              x1="18.36"
+              y1="5.64"
+              x2="19.78"
+              y2="4.22"
+            />
           </svg>
         </button>
       </div>
@@ -563,54 +662,167 @@ const code = {
     </div>
 
     <nav class="sidebar-nav">
-      <a href="#hero" @click="navClick" :class="{ active: activeSection === 'hero' }">Introduction</a>
-      <a href="#features" @click="navClick" :class="{ active: activeSection === 'features' }">Features</a>
-      <a href="#installation" @click="navClick" :class="{ active: activeSection === 'installation' }">Installation</a>
+      <a
+        href="#hero"
+        :class="{ active: activeSection === 'hero' }"
+        @click="navClick"
+      >Introduction</a>
+      <a
+        href="#features"
+        :class="{ active: activeSection === 'features' }"
+        @click="navClick"
+      >Features</a>
+      <a
+        href="#installation"
+        :class="{ active: activeSection === 'installation' }"
+        @click="navClick"
+      >Installation</a>
 
-      <div class="nav-group">Examples</div>
-      <a href="#ex-basic" @click="navClick" :class="{ active: activeSection === 'ex-basic' }">Basic Table</a>
-      <a href="#ex-custom" @click="navClick" :class="{ active: activeSection === 'ex-custom' }">Custom Cells</a>
-      <a href="#ex-striped" @click="navClick" :class="{ active: activeSection === 'ex-striped' }">Striped &amp; Bordered</a>
-      <a href="#ex-sizing" @click="navClick" :class="{ active: activeSection === 'ex-sizing' }">Column Sizing</a>
-      <a href="#ex-visibility" @click="navClick" :class="{ active: activeSection === 'ex-visibility' }">Column Visibility</a>
-      <a href="#ex-sorting" @click="navClick" :class="{ active: activeSection === 'ex-sorting' }">Sorting</a>
-      <a href="#ex-footer" @click="navClick" :class="{ active: activeSection === 'ex-footer' }">Footer / Totals</a>
-      <a href="#ex-row-events" @click="navClick" :class="{ active: activeSection === 'ex-row-events' }">Row Events</a>
-      <a href="#ex-cell-click" @click="navClick" :class="{ active: activeSection === 'ex-cell-click' }">Cell Click</a>
-      <a href="#ex-sticky" @click="navClick" :class="{ active: activeSection === 'ex-sticky' }">Sticky Columns</a>
-      <a href="#ex-sticky-header" @click="navClick" :class="{ active: activeSection === 'ex-sticky-header' }">Sticky Header</a>
-      <a href="#ex-groups" @click="navClick" :class="{ active: activeSection === 'ex-groups' }">Column Groups</a>
-      <a href="#ex-loading" @click="navClick" :class="{ active: activeSection === 'ex-loading' }">Loading State</a>
-      <a href="#ex-empty" @click="navClick" :class="{ active: activeSection === 'ex-empty' }">Empty State</a>
-      <a href="#ex-caption" @click="navClick" :class="{ active: activeSection === 'ex-caption' }">Caption</a>
+      <div class="nav-group">
+        Examples
+      </div>
+      <a
+        href="#ex-basic"
+        :class="{ active: activeSection === 'ex-basic' }"
+        @click="navClick"
+      >Basic Table</a>
+      <a
+        href="#ex-custom"
+        :class="{ active: activeSection === 'ex-custom' }"
+        @click="navClick"
+      >Custom Cells</a>
+      <a
+        href="#ex-striped"
+        :class="{ active: activeSection === 'ex-striped' }"
+        @click="navClick"
+      >Striped &amp; Bordered</a>
+      <a
+        href="#ex-sizing"
+        :class="{ active: activeSection === 'ex-sizing' }"
+        @click="navClick"
+      >Column Sizing</a>
+      <a
+        href="#ex-visibility"
+        :class="{ active: activeSection === 'ex-visibility' }"
+        @click="navClick"
+      >Column Visibility</a>
+      <a
+        href="#ex-sorting"
+        :class="{ active: activeSection === 'ex-sorting' }"
+        @click="navClick"
+      >Sorting</a>
+      <a
+        href="#ex-footer"
+        :class="{ active: activeSection === 'ex-footer' }"
+        @click="navClick"
+      >Footer / Totals</a>
+      <a
+        href="#ex-row-events"
+        :class="{ active: activeSection === 'ex-row-events' }"
+        @click="navClick"
+      >Row Events</a>
+      <a
+        href="#ex-cell-click"
+        :class="{ active: activeSection === 'ex-cell-click' }"
+        @click="navClick"
+      >Cell Click</a>
+      <a
+        href="#ex-sticky"
+        :class="{ active: activeSection === 'ex-sticky' }"
+        @click="navClick"
+      >Sticky Columns</a>
+      <a
+        href="#ex-sticky-header"
+        :class="{ active: activeSection === 'ex-sticky-header' }"
+        @click="navClick"
+      >Sticky Header</a>
+      <a
+        href="#ex-groups"
+        :class="{ active: activeSection === 'ex-groups' }"
+        @click="navClick"
+      >Column Groups</a>
+      <a
+        href="#ex-loading"
+        :class="{ active: activeSection === 'ex-loading' }"
+        @click="navClick"
+      >Loading State</a>
+      <a
+        href="#ex-empty"
+        :class="{ active: activeSection === 'ex-empty' }"
+        @click="navClick"
+      >Empty State</a>
+      <a
+        href="#ex-caption"
+        :class="{ active: activeSection === 'ex-caption' }"
+        @click="navClick"
+      >Caption</a>
 
-      <div class="nav-group">API Reference</div>
-      <a href="#api-slottable" @click="navClick" :class="{ active: activeSection === 'api-slottable' }">SlotTable</a>
-      <a href="#api-column" @click="navClick" :class="{ active: activeSection === 'api-column' }">SlotTableColumn</a>
-      <a href="#api-columngroup" @click="navClick" :class="{ active: activeSection === 'api-columngroup' }">SlotTableColumnGroup</a>
-      <a href="#api-cellscope" @click="navClick" :class="{ active: activeSection === 'api-cellscope' }">Cell Slot Scope</a>
+      <div class="nav-group">
+        API Reference
+      </div>
+      <a
+        href="#api-slottable"
+        :class="{ active: activeSection === 'api-slottable' }"
+        @click="navClick"
+      >SlotTable</a>
+      <a
+        href="#api-column"
+        :class="{ active: activeSection === 'api-column' }"
+        @click="navClick"
+      >SlotTableColumn</a>
+      <a
+        href="#api-columngroup"
+        :class="{ active: activeSection === 'api-columngroup' }"
+        @click="navClick"
+      >SlotTableColumnGroup</a>
+      <a
+        href="#api-cellscope"
+        :class="{ active: activeSection === 'api-cellscope' }"
+        @click="navClick"
+      >Cell Slot Scope</a>
     </nav>
 
     <div class="sidebar-footer">
-      <a href="https://github.com/muraliavarma/vue-slot-table" target="_blank">GitHub</a>
-      <a href="https://www.npmjs.com/package/vue-slottable" target="_blank">npm</a>
+      <a
+        href="https://github.com/muraliavarma/vue-slot-table"
+        target="_blank"
+      >GitHub</a>
+      <a
+        href="https://www.npmjs.com/package/vue-slottable"
+        target="_blank"
+      >npm</a>
     </div>
   </aside>
 
   <!-- Main content -->
   <main class="main-content">
-
     <!-- ═══════════════════════════════════════════════ -->
     <!-- HERO -->
     <!-- ═══════════════════════════════════════════════ -->
-    <section id="hero" class="hero">
+    <section
+      id="hero"
+      class="hero"
+    >
       <h1>vue-slottable</h1>
-      <p class="hero-tagline">A flexible, slot-based table component for Vue 3.</p>
-      <p class="hero-sub">Define columns with scoped slots. Add sticky columns, column groups, footers, sorting, and more &mdash; with zero CSS opinions.</p>
+      <p class="hero-tagline">
+        A flexible, slot-based table component for Vue 3.
+      </p>
+      <p class="hero-sub">
+        Define columns with scoped slots. Add sticky columns, column groups, footers, sorting, and more &mdash; with zero CSS opinions.
+      </p>
       <div class="hero-badges">
-        <a href="https://www.npmjs.com/package/vue-slottable"><img src="https://img.shields.io/npm/v/vue-slottable.svg" alt="npm" /></a>
-        <a href="https://github.com/muraliavarma/vue-slot-table"><img src="https://img.shields.io/github/license/muraliavarma/vue-slot-table.svg" alt="license" /></a>
-        <a href="https://github.com/muraliavarma/vue-slot-table/actions/workflows/ci.yml"><img src="https://github.com/muraliavarma/vue-slot-table/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
+        <a href="https://www.npmjs.com/package/vue-slottable"><img
+          src="https://img.shields.io/npm/v/vue-slottable.svg"
+          alt="npm"
+        ></a>
+        <a href="https://github.com/muraliavarma/vue-slot-table"><img
+          src="https://img.shields.io/github/license/muraliavarma/vue-slot-table.svg"
+          alt="license"
+        ></a>
+        <a href="https://github.com/muraliavarma/vue-slot-table/actions/workflows/ci.yml"><img
+          src="https://github.com/muraliavarma/vue-slot-table/actions/workflows/ci.yml/badge.svg"
+          alt="CI"
+        ></a>
       </div>
       <div class="hero-install">
         <code>npm install vue-slottable</code>
@@ -620,7 +832,10 @@ const code = {
     <!-- ═══════════════════════════════════════════════ -->
     <!-- FEATURES -->
     <!-- ═══════════════════════════════════════════════ -->
-    <section id="features" class="doc-section">
+    <section
+      id="features"
+      class="doc-section"
+    >
       <h2>Features</h2>
       <div class="features-grid">
         <div class="feature-card">
@@ -693,16 +908,26 @@ const code = {
     <!-- ═══════════════════════════════════════════════ -->
     <!-- INSTALLATION -->
     <!-- ═══════════════════════════════════════════════ -->
-    <section id="installation" class="doc-section">
+    <section
+      id="installation"
+      class="doc-section"
+    >
       <h2>Installation</h2>
-      <p class="section-desc">Requires Vue 3.4+.</p>
+      <p class="section-desc">
+        Requires Vue 3.4+.
+      </p>
       <div class="code-block">
         <div class="code-toolbar">
           <span class="code-lang">bash</span>
         </div>
         <pre><code>npm install vue-slottable</code></pre>
       </div>
-      <p class="section-desc" style="margin-top: 1rem;">Then import the components you need:</p>
+      <p
+        class="section-desc"
+        style="margin-top: 1rem;"
+      >
+        Then import the components you need:
+      </p>
       <div class="code-block">
         <div class="code-toolbar">
           <span class="code-lang">js</span>
@@ -714,30 +939,55 @@ const code = {
     <!-- ═══════════════════════════════════════════════════ -->
     <!-- EXAMPLE: BASIC -->
     <!-- ═══════════════════════════════════════════════════ -->
-    <section id="ex-basic" class="doc-section">
+    <section
+      id="ex-basic"
+      class="doc-section"
+    >
       <h2>Basic Table</h2>
-      <p class="section-desc">The simplest usage &mdash; define columns with <code>#header</code> and <code>#cell</code> slots.</p>
+      <p class="section-desc">
+        The simplest usage &mdash; define columns with <code>#header</code> and <code>#cell</code> slots.
+      </p>
       <div class="example-split">
         <div class="example-preview">
-          <SlotTable :rows="employees.slice(0, 4)" table-class="demo-table">
+          <SlotTable
+            :rows="employees.slice(0, 4)"
+            table-class="demo-table"
+          >
             <SlotTableColumn>
-              <template #header>Name</template>
-              <template #cell="{ row }">{{ row.name }}</template>
+              <template #header>
+                Name
+              </template>
+              <template #cell="{ row }">
+                {{ row.name }}
+              </template>
             </SlotTableColumn>
             <SlotTableColumn>
-              <template #header>Role</template>
-              <template #cell="{ row }">{{ row.role }}</template>
+              <template #header>
+                Role
+              </template>
+              <template #cell="{ row }">
+                {{ row.role }}
+              </template>
             </SlotTableColumn>
             <SlotTableColumn>
-              <template #header>Department</template>
-              <template #cell="{ row }">{{ row.department }}</template>
+              <template #header>
+                Department
+              </template>
+              <template #cell="{ row }">
+                {{ row.department }}
+              </template>
             </SlotTableColumn>
           </SlotTable>
         </div>
         <div class="example-code">
           <div class="code-toolbar">
             <span class="code-lang">vue</span>
-            <button class="copy-btn" @click="copyCode('basic')">{{ copiedKey === 'basic' ? 'Copied!' : 'Copy' }}</button>
+            <button
+              class="copy-btn"
+              @click="copyCode('basic')"
+            >
+              {{ copiedKey === 'basic' ? 'Copied!' : 'Copy' }}
+            </button>
           </div>
           <pre><code>{{ code.basic }}</code></pre>
         </div>
@@ -747,38 +997,68 @@ const code = {
     <!-- ═══════════════════════════════════════════════════ -->
     <!-- EXAMPLE: CUSTOM CELLS -->
     <!-- ═══════════════════════════════════════════════════ -->
-    <section id="ex-custom" class="doc-section">
+    <section
+      id="ex-custom"
+      class="doc-section"
+    >
       <h2>Custom Cell Rendering</h2>
-      <p class="section-desc">Use any HTML or Vue components inside cell slots. The scoped slot receives <code>{ row, rowIndex, columnIndex }</code>.</p>
+      <p class="section-desc">
+        Use any HTML or Vue components inside cell slots. The scoped slot receives <code>{ row, rowIndex, columnIndex }</code>.
+      </p>
       <div class="example-split">
         <div class="example-preview">
-          <SlotTable :rows="products" table-class="demo-table" hoverable>
+          <SlotTable
+            :rows="products"
+            table-class="demo-table"
+            hoverable
+          >
             <SlotTableColumn width="100px">
-              <template #header>SKU</template>
-              <template #cell="{ row }"><code>{{ row.sku }}</code></template>
-            </SlotTableColumn>
-            <SlotTableColumn>
-              <template #header>Product</template>
-              <template #cell="{ row }"><strong>{{ row.name }}</strong></template>
-            </SlotTableColumn>
-            <SlotTableColumn>
-              <template #header>Category</template>
+              <template #header>
+                SKU
+              </template>
               <template #cell="{ row }">
-                <span class="pill" :class="'pill--' + row.category.toLowerCase()">{{ row.category }}</span>
+                <code>{{ row.sku }}</code>
+              </template>
+            </SlotTableColumn>
+            <SlotTableColumn>
+              <template #header>
+                Product
+              </template>
+              <template #cell="{ row }">
+                <strong>{{ row.name }}</strong>
+              </template>
+            </SlotTableColumn>
+            <SlotTableColumn>
+              <template #header>
+                Category
+              </template>
+              <template #cell="{ row }">
+                <span
+                  class="pill"
+                  :class="'pill--' + row.category.toLowerCase()"
+                >{{ row.category }}</span>
               </template>
             </SlotTableColumn>
             <SlotTableColumn align="right">
-              <template #header>Price</template>
-              <template #cell="{ row }">{{ currency(row.price) }}</template>
+              <template #header>
+                Price
+              </template>
+              <template #cell="{ row }">
+                {{ currency(row.price) }}
+              </template>
             </SlotTableColumn>
             <SlotTableColumn align="center">
-              <template #header>Rating</template>
+              <template #header>
+                Rating
+              </template>
               <template #cell="{ row }">
                 <span class="stars">{{ stars(row.rating) }}</span>
               </template>
             </SlotTableColumn>
             <SlotTableColumn align="right">
-              <template #header>Stock</template>
+              <template #header>
+                Stock
+              </template>
               <template #cell="{ row }">
                 <span :class="{ 'out-of-stock': row.stock === 0 }">
                   {{ row.stock === 0 ? 'Out of stock' : row.stock }}
@@ -790,7 +1070,12 @@ const code = {
         <div class="example-code">
           <div class="code-toolbar">
             <span class="code-lang">vue</span>
-            <button class="copy-btn" @click="copyCode('customCells')">{{ copiedKey === 'customCells' ? 'Copied!' : 'Copy' }}</button>
+            <button
+              class="copy-btn"
+              @click="copyCode('customCells')"
+            >
+              {{ copiedKey === 'customCells' ? 'Copied!' : 'Copy' }}
+            </button>
           </div>
           <pre><code>{{ code.customCells }}</code></pre>
         </div>
@@ -800,34 +1085,65 @@ const code = {
     <!-- ═══════════════════════════════════════════════════ -->
     <!-- EXAMPLE: STRIPED & BORDERED -->
     <!-- ═══════════════════════════════════════════════════ -->
-    <section id="ex-striped" class="doc-section">
+    <section
+      id="ex-striped"
+      class="doc-section"
+    >
       <h2>Striped &amp; Bordered</h2>
-      <p class="section-desc">Add <code>striped</code> and <code>bordered</code> props for classic table styling.</p>
+      <p class="section-desc">
+        Add <code>striped</code> and <code>bordered</code> props for classic table styling.
+      </p>
       <div class="example-split">
         <div class="example-preview">
-          <SlotTable :rows="employees.slice(0, 5)" table-class="demo-table" striped bordered>
+          <SlotTable
+            :rows="employees.slice(0, 5)"
+            table-class="demo-table"
+            striped
+            bordered
+          >
             <SlotTableColumn>
-              <template #header>Name</template>
-              <template #cell="{ row }">{{ row.name }}</template>
+              <template #header>
+                Name
+              </template>
+              <template #cell="{ row }">
+                {{ row.name }}
+              </template>
             </SlotTableColumn>
             <SlotTableColumn align="center">
-              <template #header>Age</template>
-              <template #cell="{ row }">{{ row.age }}</template>
+              <template #header>
+                Age
+              </template>
+              <template #cell="{ row }">
+                {{ row.age }}
+              </template>
             </SlotTableColumn>
             <SlotTableColumn>
-              <template #header>Department</template>
-              <template #cell="{ row }">{{ row.department }}</template>
+              <template #header>
+                Department
+              </template>
+              <template #cell="{ row }">
+                {{ row.department }}
+              </template>
             </SlotTableColumn>
             <SlotTableColumn align="right">
-              <template #header>Salary</template>
-              <template #cell="{ row }">{{ currency(row.salary) }}</template>
+              <template #header>
+                Salary
+              </template>
+              <template #cell="{ row }">
+                {{ currency(row.salary) }}
+              </template>
             </SlotTableColumn>
           </SlotTable>
         </div>
         <div class="example-code">
           <div class="code-toolbar">
             <span class="code-lang">vue</span>
-            <button class="copy-btn" @click="copyCode('stripedBordered')">{{ copiedKey === 'stripedBordered' ? 'Copied!' : 'Copy' }}</button>
+            <button
+              class="copy-btn"
+              @click="copyCode('stripedBordered')"
+            >
+              {{ copiedKey === 'stripedBordered' ? 'Copied!' : 'Copy' }}
+            </button>
           </div>
           <pre><code>{{ code.stripedBordered }}</code></pre>
         </div>
@@ -837,9 +1153,14 @@ const code = {
     <!-- ═══════════════════════════════════════════════════ -->
     <!-- EXAMPLE: SORTING -->
     <!-- ═══════════════════════════════════════════════════ -->
-    <section id="ex-sorting" class="doc-section">
+    <section
+      id="ex-sorting"
+      class="doc-section"
+    >
       <h2>Sorting</h2>
-      <p class="section-desc">Use the <code>@header-click</code> event to implement sorting. Click any column header to sort.</p>
+      <p class="section-desc">
+        Use the <code>@header-click</code> event to implement sorting. Click any column header to sort.
+      </p>
       <div class="example-split">
         <div class="example-preview">
           <SlotTable
@@ -850,31 +1171,56 @@ const code = {
             @header-click="onSortClick"
           >
             <SlotTableColumn>
-              <template #header><span class="sortable">Name{{ sortIndicator(0) }}</span></template>
-              <template #cell="{ row }">{{ row.name }}</template>
+              <template #header>
+                <span class="sortable">Name{{ sortIndicator(0) }}</span>
+              </template>
+              <template #cell="{ row }">
+                {{ row.name }}
+              </template>
             </SlotTableColumn>
             <SlotTableColumn align="center">
-              <template #header><span class="sortable">Age{{ sortIndicator(1) }}</span></template>
-              <template #cell="{ row }">{{ row.age }}</template>
+              <template #header>
+                <span class="sortable">Age{{ sortIndicator(1) }}</span>
+              </template>
+              <template #cell="{ row }">
+                {{ row.age }}
+              </template>
             </SlotTableColumn>
             <SlotTableColumn>
-              <template #header><span class="sortable">Role{{ sortIndicator(2) }}</span></template>
-              <template #cell="{ row }">{{ row.role }}</template>
+              <template #header>
+                <span class="sortable">Role{{ sortIndicator(2) }}</span>
+              </template>
+              <template #cell="{ row }">
+                {{ row.role }}
+              </template>
             </SlotTableColumn>
             <SlotTableColumn>
-              <template #header><span class="sortable">Department{{ sortIndicator(3) }}</span></template>
-              <template #cell="{ row }">{{ row.department }}</template>
+              <template #header>
+                <span class="sortable">Department{{ sortIndicator(3) }}</span>
+              </template>
+              <template #cell="{ row }">
+                {{ row.department }}
+              </template>
             </SlotTableColumn>
             <SlotTableColumn align="right">
-              <template #header><span class="sortable">Salary{{ sortIndicator(4) }}</span></template>
-              <template #cell="{ row }">{{ currency(row.salary) }}</template>
+              <template #header>
+                <span class="sortable">Salary{{ sortIndicator(4) }}</span>
+              </template>
+              <template #cell="{ row }">
+                {{ currency(row.salary) }}
+              </template>
             </SlotTableColumn>
           </SlotTable>
         </div>
         <div class="example-code">
           <div class="code-toolbar">
             <span class="code-lang">vue</span>
-            <button class="copy-btn" @click="copyCode('sorting')">{{ copiedKey === 'sorting' ? 'Copied!' : 'Copy' }}</button>
+            <button
+              class="copy-btn"
+              @click="copyCode('sorting')"
+            >
+              {{ copiedKey === 'sorting' ? 'Copied!' : 'Copy' }}
+            </button>
           </div>
           <pre><code>{{ code.sorting }}</code></pre>
         </div>
@@ -884,12 +1230,20 @@ const code = {
     <!-- ═══════════════════════════════════════════════════ -->
     <!-- EXAMPLE: ROW EVENTS -->
     <!-- ═══════════════════════════════════════════════════ -->
-    <section id="ex-row-events" class="doc-section">
+    <section
+      id="ex-row-events"
+      class="doc-section"
+    >
       <h2>Row Click &amp; Dynamic Row Classes</h2>
-      <p class="section-desc">Handle row clicks with <code>@row-click</code> and apply dynamic classes with <code>:row-class</code>. Inactive rows are dimmed.</p>
+      <p class="section-desc">
+        Handle row clicks with <code>@row-click</code> and apply dynamic classes with <code>:row-class</code>. Inactive rows are dimmed.
+      </p>
       <div class="example-split">
         <div class="example-preview">
-          <div v-if="clickedRow" class="click-banner">
+          <div
+            v-if="clickedRow"
+            class="click-banner"
+          >
             Clicked: <strong>{{ clickedRow.name }}</strong> ({{ clickedRow.role }})
           </div>
           <SlotTable
@@ -900,30 +1254,52 @@ const code = {
             @row-click="onRowClick"
           >
             <SlotTableColumn>
-              <template #header>Name</template>
-              <template #cell="{ row }">{{ row.name }}</template>
-            </SlotTableColumn>
-            <SlotTableColumn>
-              <template #header>Role</template>
-              <template #cell="{ row }">{{ row.role }}</template>
-            </SlotTableColumn>
-            <SlotTableColumn>
-              <template #header>Status</template>
+              <template #header>
+                Name
+              </template>
               <template #cell="{ row }">
-                <span class="status-dot" :class="'status--' + row.status" />
+                {{ row.name }}
+              </template>
+            </SlotTableColumn>
+            <SlotTableColumn>
+              <template #header>
+                Role
+              </template>
+              <template #cell="{ row }">
+                {{ row.role }}
+              </template>
+            </SlotTableColumn>
+            <SlotTableColumn>
+              <template #header>
+                Status
+              </template>
+              <template #cell="{ row }">
+                <span
+                  class="status-dot"
+                  :class="'status--' + row.status"
+                />
                 {{ row.status }}
               </template>
             </SlotTableColumn>
             <SlotTableColumn align="right">
-              <template #header>Salary</template>
-              <template #cell="{ row }">{{ currency(row.salary) }}</template>
+              <template #header>
+                Salary
+              </template>
+              <template #cell="{ row }">
+                {{ currency(row.salary) }}
+              </template>
             </SlotTableColumn>
           </SlotTable>
         </div>
         <div class="example-code">
           <div class="code-toolbar">
             <span class="code-lang">vue</span>
-            <button class="copy-btn" @click="copyCode('rowEvents')">{{ copiedKey === 'rowEvents' ? 'Copied!' : 'Copy' }}</button>
+            <button
+              class="copy-btn"
+              @click="copyCode('rowEvents')"
+            >
+              {{ copiedKey === 'rowEvents' ? 'Copied!' : 'Copy' }}
+            </button>
           </div>
           <pre><code>{{ code.rowEvents }}</code></pre>
         </div>
@@ -933,42 +1309,90 @@ const code = {
     <!-- ═══════════════════════════════════════════════════ -->
     <!-- EXAMPLE: STICKY COLUMNS -->
     <!-- ═══════════════════════════════════════════════════ -->
-    <section id="ex-sticky" class="doc-section">
+    <section
+      id="ex-sticky"
+      class="doc-section"
+    >
       <h2>Sticky Columns</h2>
-      <p class="section-desc">Pin columns to the left or right edge with <code>sticky="left"</code> or <code>sticky="right"</code>. Scroll horizontally to see.</p>
+      <p class="section-desc">
+        Pin columns to the left or right edge with <code>sticky="left"</code> or <code>sticky="right"</code>. Scroll horizontally to see.
+      </p>
       <div class="example-split example-split--full">
         <div class="example-preview scroll-container">
-          <SlotTable :rows="employees" table-class="demo-table demo-table-wide" hoverable>
-            <SlotTableColumn sticky="left" min-width="200px">
-              <template #header>Name (sticky)</template>
-              <template #cell="{ row }"><strong>{{ row.name }}</strong></template>
+          <SlotTable
+            :rows="employees"
+            table-class="demo-table demo-table-wide"
+            hoverable
+          >
+            <SlotTableColumn
+              sticky="left"
+              min-width="200px"
+            >
+              <template #header>
+                Name (sticky)
+              </template>
+              <template #cell="{ row }">
+                <strong>{{ row.name }}</strong>
+              </template>
             </SlotTableColumn>
             <SlotTableColumn min-width="200px">
-              <template #header>Role</template>
-              <template #cell="{ row }">{{ row.role }}</template>
+              <template #header>
+                Role
+              </template>
+              <template #cell="{ row }">
+                {{ row.role }}
+              </template>
             </SlotTableColumn>
             <SlotTableColumn min-width="200px">
-              <template #header>Department</template>
-              <template #cell="{ row }">{{ row.department }}</template>
+              <template #header>
+                Department
+              </template>
+              <template #cell="{ row }">
+                {{ row.department }}
+              </template>
             </SlotTableColumn>
-            <SlotTableColumn min-width="150px" align="center">
-              <template #header>Age</template>
-              <template #cell="{ row }">{{ row.age }}</template>
+            <SlotTableColumn
+              min-width="150px"
+              align="center"
+            >
+              <template #header>
+                Age
+              </template>
+              <template #cell="{ row }">
+                {{ row.age }}
+              </template>
             </SlotTableColumn>
             <SlotTableColumn min-width="200px">
-              <template #header>Status</template>
-              <template #cell="{ row }">{{ row.status }}</template>
+              <template #header>
+                Status
+              </template>
+              <template #cell="{ row }">
+                {{ row.status }}
+              </template>
             </SlotTableColumn>
-            <SlotTableColumn sticky="right" min-width="150px" align="right">
-              <template #header>Salary (sticky)</template>
-              <template #cell="{ row }">{{ currency(row.salary) }}</template>
+            <SlotTableColumn
+              sticky="right"
+              min-width="150px"
+              align="right"
+            >
+              <template #header>
+                Salary (sticky)
+              </template>
+              <template #cell="{ row }">
+                {{ currency(row.salary) }}
+              </template>
             </SlotTableColumn>
           </SlotTable>
         </div>
         <div class="example-code">
           <div class="code-toolbar">
             <span class="code-lang">vue</span>
-            <button class="copy-btn" @click="copyCode('stickyColumns')">{{ copiedKey === 'stickyColumns' ? 'Copied!' : 'Copy' }}</button>
+            <button
+              class="copy-btn"
+              @click="copyCode('stickyColumns')"
+            >
+              {{ copiedKey === 'stickyColumns' ? 'Copied!' : 'Copy' }}
+            </button>
           </div>
           <pre><code>{{ code.stickyColumns }}</code></pre>
         </div>
@@ -978,42 +1402,82 @@ const code = {
     <!-- ═══════════════════════════════════════════════════ -->
     <!-- EXAMPLE: COLUMN GROUPS -->
     <!-- ═══════════════════════════════════════════════════ -->
-    <section id="ex-groups" class="doc-section">
+    <section
+      id="ex-groups"
+      class="doc-section"
+    >
       <h2>Column Groups</h2>
-      <p class="section-desc">Add grouped header rows with <code>&lt;SlotTableColumnGroup&gt;</code> and <code>:colspan</code>.</p>
+      <p class="section-desc">
+        Add grouped header rows with <code>&lt;SlotTableColumnGroup&gt;</code> and <code>:colspan</code>.
+      </p>
       <div class="example-split">
         <div class="example-preview">
-          <SlotTable :rows="employees.slice(0, 5)" table-class="demo-table" bordered>
-            <SlotTableColumnGroup :colspan="2">Identity</SlotTableColumnGroup>
-            <SlotTableColumnGroup :colspan="2">Position</SlotTableColumnGroup>
-            <SlotTableColumnGroup :colspan="1">Pay</SlotTableColumnGroup>
+          <SlotTable
+            :rows="employees.slice(0, 5)"
+            table-class="demo-table"
+            bordered
+          >
+            <SlotTableColumnGroup :colspan="2">
+              Identity
+            </SlotTableColumnGroup>
+            <SlotTableColumnGroup :colspan="2">
+              Position
+            </SlotTableColumnGroup>
+            <SlotTableColumnGroup :colspan="1">
+              Pay
+            </SlotTableColumnGroup>
 
             <SlotTableColumn>
-              <template #header>Name</template>
-              <template #cell="{ row }">{{ row.name }}</template>
+              <template #header>
+                Name
+              </template>
+              <template #cell="{ row }">
+                {{ row.name }}
+              </template>
             </SlotTableColumn>
             <SlotTableColumn align="center">
-              <template #header>Age</template>
-              <template #cell="{ row }">{{ row.age }}</template>
+              <template #header>
+                Age
+              </template>
+              <template #cell="{ row }">
+                {{ row.age }}
+              </template>
             </SlotTableColumn>
             <SlotTableColumn>
-              <template #header>Role</template>
-              <template #cell="{ row }">{{ row.role }}</template>
+              <template #header>
+                Role
+              </template>
+              <template #cell="{ row }">
+                {{ row.role }}
+              </template>
             </SlotTableColumn>
             <SlotTableColumn>
-              <template #header>Department</template>
-              <template #cell="{ row }">{{ row.department }}</template>
+              <template #header>
+                Department
+              </template>
+              <template #cell="{ row }">
+                {{ row.department }}
+              </template>
             </SlotTableColumn>
             <SlotTableColumn align="right">
-              <template #header>Salary</template>
-              <template #cell="{ row }">{{ currency(row.salary) }}</template>
+              <template #header>
+                Salary
+              </template>
+              <template #cell="{ row }">
+                {{ currency(row.salary) }}
+              </template>
             </SlotTableColumn>
           </SlotTable>
         </div>
         <div class="example-code">
           <div class="code-toolbar">
             <span class="code-lang">vue</span>
-            <button class="copy-btn" @click="copyCode('columnGroups')">{{ copiedKey === 'columnGroups' ? 'Copied!' : 'Copy' }}</button>
+            <button
+              class="copy-btn"
+              @click="copyCode('columnGroups')"
+            >
+              {{ copiedKey === 'columnGroups' ? 'Copied!' : 'Copy' }}
+            </button>
           </div>
           <pre><code>{{ code.columnGroups }}</code></pre>
         </div>
@@ -1023,37 +1487,64 @@ const code = {
     <!-- ═══════════════════════════════════════════════════ -->
     <!-- EXAMPLE: EMPTY STATE -->
     <!-- ═══════════════════════════════════════════════════ -->
-    <section id="ex-empty" class="doc-section">
+    <section
+      id="ex-empty"
+      class="doc-section"
+    >
       <h2>Empty State</h2>
-      <p class="section-desc">Provide an <code>#empty</code> slot to display when there are no rows.</p>
+      <p class="section-desc">
+        Provide an <code>#empty</code> slot to display when there are no rows.
+      </p>
       <div class="example-split">
         <div class="example-preview">
-          <SlotTable :rows="emptyRows" table-class="demo-table">
+          <SlotTable
+            :rows="emptyRows"
+            table-class="demo-table"
+          >
             <template #empty>
               <div class="empty-state">
-                <div class="empty-icon">&#128269;</div>
+                <div class="empty-icon">
+                  &#128269;
+                </div>
                 <p><strong>No data found</strong></p>
                 <p>Try adjusting your search or filters.</p>
               </div>
             </template>
             <SlotTableColumn>
-              <template #header>Name</template>
-              <template #cell="{ row }">{{ row.name }}</template>
+              <template #header>
+                Name
+              </template>
+              <template #cell="{ row }">
+                {{ row.name }}
+              </template>
             </SlotTableColumn>
             <SlotTableColumn>
-              <template #header>Email</template>
-              <template #cell="{ row }">{{ row.email }}</template>
+              <template #header>
+                Email
+              </template>
+              <template #cell="{ row }">
+                {{ row.email }}
+              </template>
             </SlotTableColumn>
             <SlotTableColumn>
-              <template #header>Status</template>
-              <template #cell="{ row }">{{ row.status }}</template>
+              <template #header>
+                Status
+              </template>
+              <template #cell="{ row }">
+                {{ row.status }}
+              </template>
             </SlotTableColumn>
           </SlotTable>
         </div>
         <div class="example-code">
           <div class="code-toolbar">
             <span class="code-lang">vue</span>
-            <button class="copy-btn" @click="copyCode('emptyState')">{{ copiedKey === 'emptyState' ? 'Copied!' : 'Copy' }}</button>
+            <button
+              class="copy-btn"
+              @click="copyCode('emptyState')"
+            >
+              {{ copiedKey === 'emptyState' ? 'Copied!' : 'Copy' }}
+            </button>
           </div>
           <pre><code>{{ code.emptyState }}</code></pre>
         </div>
@@ -1063,38 +1554,84 @@ const code = {
     <!-- ═══════════════════════════════════════════════════ -->
     <!-- EXAMPLE: COLUMN SIZING -->
     <!-- ═══════════════════════════════════════════════════ -->
-    <section id="ex-sizing" class="doc-section">
+    <section
+      id="ex-sizing"
+      class="doc-section"
+    >
       <h2>Column Width &amp; Alignment</h2>
-      <p class="section-desc">Control column sizing with <code>width</code> and <code>min-width</code>. Set text alignment with <code>align</code>.</p>
+      <p class="section-desc">
+        Control column sizing with <code>width</code> and <code>min-width</code>. Set text alignment with <code>align</code>.
+      </p>
       <div class="example-split">
         <div class="example-preview">
-          <SlotTable :rows="products.slice(0, 4)" table-class="demo-table" striped>
-            <SlotTableColumn width="60px" align="center">
-              <template #header>#</template>
-              <template #cell="{ rowIndex }">{{ rowIndex + 1 }}</template>
+          <SlotTable
+            :rows="products.slice(0, 4)"
+            table-class="demo-table"
+            striped
+          >
+            <SlotTableColumn
+              width="60px"
+              align="center"
+            >
+              <template #header>
+                #
+              </template>
+              <template #cell="{ rowIndex }">
+                {{ rowIndex + 1 }}
+              </template>
             </SlotTableColumn>
             <SlotTableColumn min-width="200px">
-              <template #header>Product</template>
-              <template #cell="{ row }">{{ row.name }}</template>
+              <template #header>
+                Product
+              </template>
+              <template #cell="{ row }">
+                {{ row.name }}
+              </template>
             </SlotTableColumn>
-            <SlotTableColumn width="120px" align="center">
-              <template #header>Category</template>
-              <template #cell="{ row }">{{ row.category }}</template>
+            <SlotTableColumn
+              width="120px"
+              align="center"
+            >
+              <template #header>
+                Category
+              </template>
+              <template #cell="{ row }">
+                {{ row.category }}
+              </template>
             </SlotTableColumn>
-            <SlotTableColumn width="100px" align="right">
-              <template #header>Price</template>
-              <template #cell="{ row }">{{ currency(row.price) }}</template>
+            <SlotTableColumn
+              width="100px"
+              align="right"
+            >
+              <template #header>
+                Price
+              </template>
+              <template #cell="{ row }">
+                {{ currency(row.price) }}
+              </template>
             </SlotTableColumn>
-            <SlotTableColumn width="80px" align="right">
-              <template #header>Stock</template>
-              <template #cell="{ row }">{{ row.stock }}</template>
+            <SlotTableColumn
+              width="80px"
+              align="right"
+            >
+              <template #header>
+                Stock
+              </template>
+              <template #cell="{ row }">
+                {{ row.stock }}
+              </template>
             </SlotTableColumn>
           </SlotTable>
         </div>
         <div class="example-code">
           <div class="code-toolbar">
             <span class="code-lang">vue</span>
-            <button class="copy-btn" @click="copyCode('columnSizing')">{{ copiedKey === 'columnSizing' ? 'Copied!' : 'Copy' }}</button>
+            <button
+              class="copy-btn"
+              @click="copyCode('columnSizing')"
+            >
+              {{ copiedKey === 'columnSizing' ? 'Copied!' : 'Copy' }}
+            </button>
           </div>
           <pre><code>{{ code.columnSizing }}</code></pre>
         </div>
@@ -1104,40 +1641,76 @@ const code = {
     <!-- ═══════════════════════════════════════════════════ -->
     <!-- EXAMPLE: FOOTER / TOTALS -->
     <!-- ═══════════════════════════════════════════════════ -->
-    <section id="ex-footer" class="doc-section">
+    <section
+      id="ex-footer"
+      class="doc-section"
+    >
       <h2>Footer / Totals</h2>
-      <p class="section-desc">Add a <code>#footer</code> slot to any column. The component renders a <code>&lt;tfoot&gt;</code> row automatically.</p>
+      <p class="section-desc">
+        Add a <code>#footer</code> slot to any column. The component renders a <code>&lt;tfoot&gt;</code> row automatically.
+      </p>
       <div class="example-split">
         <div class="example-preview">
-          <SlotTable :rows="products" table-class="demo-table" bordered>
+          <SlotTable
+            :rows="products"
+            table-class="demo-table"
+            bordered
+          >
             <SlotTableColumn>
-              <template #header>Product</template>
-              <template #cell="{ row }">{{ row.name }}</template>
-              <template #footer><strong>Totals / Averages</strong></template>
+              <template #header>
+                Product
+              </template>
+              <template #cell="{ row }">
+                {{ row.name }}
+              </template>
+              <template #footer>
+                <strong>Totals / Averages</strong>
+              </template>
             </SlotTableColumn>
             <SlotTableColumn align="right">
-              <template #header>Price</template>
-              <template #cell="{ row }">{{ currency(row.price) }}</template>
-              <template #footer><strong>Avg {{ currency(avgPrice) }}</strong></template>
+              <template #header>
+                Price
+              </template>
+              <template #cell="{ row }">
+                {{ currency(row.price) }}
+              </template>
+              <template #footer>
+                <strong>Avg {{ currency(avgPrice) }}</strong>
+              </template>
             </SlotTableColumn>
             <SlotTableColumn align="right">
-              <template #header>Stock</template>
-              <template #cell="{ row }">{{ row.stock }}</template>
-              <template #footer><strong>{{ totalStock }}</strong></template>
+              <template #header>
+                Stock
+              </template>
+              <template #cell="{ row }">
+                {{ row.stock }}
+              </template>
+              <template #footer>
+                <strong>{{ totalStock }}</strong>
+              </template>
             </SlotTableColumn>
             <SlotTableColumn align="center">
-              <template #header>Rating</template>
+              <template #header>
+                Rating
+              </template>
               <template #cell="{ row }">
                 <span class="stars">{{ stars(row.rating) }}</span>
               </template>
-              <template #footer><strong>{{ avgRating }}</strong></template>
+              <template #footer>
+                <strong>{{ avgRating }}</strong>
+              </template>
             </SlotTableColumn>
           </SlotTable>
         </div>
         <div class="example-code">
           <div class="code-toolbar">
             <span class="code-lang">vue</span>
-            <button class="copy-btn" @click="copyCode('footer')">{{ copiedKey === 'footer' ? 'Copied!' : 'Copy' }}</button>
+            <button
+              class="copy-btn"
+              @click="copyCode('footer')"
+            >
+              {{ copiedKey === 'footer' ? 'Copied!' : 'Copy' }}
+            </button>
           </div>
           <pre><code>{{ code.footer }}</code></pre>
         </div>
@@ -1147,43 +1720,92 @@ const code = {
     <!-- ═══════════════════════════════════════════════════ -->
     <!-- EXAMPLE: COLUMN VISIBILITY -->
     <!-- ═══════════════════════════════════════════════════ -->
-    <section id="ex-visibility" class="doc-section">
+    <section
+      id="ex-visibility"
+      class="doc-section"
+    >
       <h2>Column Visibility</h2>
-      <p class="section-desc">Toggle columns on and off with <code>:visible</code>. Use the checkboxes to try it live.</p>
+      <p class="section-desc">
+        Toggle columns on and off with <code>:visible</code>. Use the checkboxes to try it live.
+      </p>
       <div class="example-split">
         <div class="example-preview">
           <div class="toggle-bar">
-            <label class="toggle-label"><input type="checkbox" v-model="showAge" /> Age</label>
-            <label class="toggle-label"><input type="checkbox" v-model="showDepartment" /> Department</label>
-            <label class="toggle-label"><input type="checkbox" v-model="showSalary" /> Salary</label>
+            <label class="toggle-label"><input
+              v-model="showAge"
+              type="checkbox"
+            > Age</label>
+            <label class="toggle-label"><input
+              v-model="showDepartment"
+              type="checkbox"
+            > Department</label>
+            <label class="toggle-label"><input
+              v-model="showSalary"
+              type="checkbox"
+            > Salary</label>
           </div>
-          <SlotTable :rows="employees.slice(0, 5)" table-class="demo-table" hoverable>
+          <SlotTable
+            :rows="employees.slice(0, 5)"
+            table-class="demo-table"
+            hoverable
+          >
             <SlotTableColumn>
-              <template #header>Name</template>
-              <template #cell="{ row }">{{ row.name }}</template>
+              <template #header>
+                Name
+              </template>
+              <template #cell="{ row }">
+                {{ row.name }}
+              </template>
             </SlotTableColumn>
-            <SlotTableColumn :visible="showAge" align="center">
-              <template #header>Age</template>
-              <template #cell="{ row }">{{ row.age }}</template>
+            <SlotTableColumn
+              :visible="showAge"
+              align="center"
+            >
+              <template #header>
+                Age
+              </template>
+              <template #cell="{ row }">
+                {{ row.age }}
+              </template>
             </SlotTableColumn>
             <SlotTableColumn>
-              <template #header>Role</template>
-              <template #cell="{ row }">{{ row.role }}</template>
+              <template #header>
+                Role
+              </template>
+              <template #cell="{ row }">
+                {{ row.role }}
+              </template>
             </SlotTableColumn>
             <SlotTableColumn :visible="showDepartment">
-              <template #header>Department</template>
-              <template #cell="{ row }">{{ row.department }}</template>
+              <template #header>
+                Department
+              </template>
+              <template #cell="{ row }">
+                {{ row.department }}
+              </template>
             </SlotTableColumn>
-            <SlotTableColumn :visible="showSalary" align="right">
-              <template #header>Salary</template>
-              <template #cell="{ row }">{{ currency(row.salary) }}</template>
+            <SlotTableColumn
+              :visible="showSalary"
+              align="right"
+            >
+              <template #header>
+                Salary
+              </template>
+              <template #cell="{ row }">
+                {{ currency(row.salary) }}
+              </template>
             </SlotTableColumn>
           </SlotTable>
         </div>
         <div class="example-code">
           <div class="code-toolbar">
             <span class="code-lang">vue</span>
-            <button class="copy-btn" @click="copyCode('visibility')">{{ copiedKey === 'visibility' ? 'Copied!' : 'Copy' }}</button>
+            <button
+              class="copy-btn"
+              @click="copyCode('visibility')"
+            >
+              {{ copiedKey === 'visibility' ? 'Copied!' : 'Copy' }}
+            </button>
           </div>
           <pre><code>{{ code.visibility }}</code></pre>
         </div>
@@ -1193,39 +1815,68 @@ const code = {
     <!-- ═══════════════════════════════════════════════════ -->
     <!-- EXAMPLE: LOADING -->
     <!-- ═══════════════════════════════════════════════════ -->
-    <section id="ex-loading" class="doc-section">
+    <section
+      id="ex-loading"
+      class="doc-section"
+    >
       <h2>Loading State</h2>
-      <p class="section-desc">Show a loading indicator while data is being fetched. Toggle the <code>:loading</code> prop.</p>
+      <p class="section-desc">
+        Show a loading indicator while data is being fetched. Toggle the <code>:loading</code> prop.
+      </p>
       <div class="example-split">
         <div class="example-preview">
           <div class="toggle-bar">
-            <label class="toggle-label"><input type="checkbox" v-model="isLoading" /> Simulate loading</label>
+            <label class="toggle-label"><input
+              v-model="isLoading"
+              type="checkbox"
+            > Simulate loading</label>
           </div>
-          <SlotTable :rows="employees.slice(0, 3)" table-class="demo-table" :loading="isLoading">
+          <SlotTable
+            :rows="employees.slice(0, 3)"
+            table-class="demo-table"
+            :loading="isLoading"
+          >
             <template #loading>
               <div class="loading-state">
-                <div class="spinner"></div>
+                <div class="spinner" />
                 <p>Loading data...</p>
               </div>
             </template>
             <SlotTableColumn>
-              <template #header>Name</template>
-              <template #cell="{ row }">{{ row.name }}</template>
+              <template #header>
+                Name
+              </template>
+              <template #cell="{ row }">
+                {{ row.name }}
+              </template>
             </SlotTableColumn>
             <SlotTableColumn>
-              <template #header>Role</template>
-              <template #cell="{ row }">{{ row.role }}</template>
+              <template #header>
+                Role
+              </template>
+              <template #cell="{ row }">
+                {{ row.role }}
+              </template>
             </SlotTableColumn>
             <SlotTableColumn>
-              <template #header>Department</template>
-              <template #cell="{ row }">{{ row.department }}</template>
+              <template #header>
+                Department
+              </template>
+              <template #cell="{ row }">
+                {{ row.department }}
+              </template>
             </SlotTableColumn>
           </SlotTable>
         </div>
         <div class="example-code">
           <div class="code-toolbar">
             <span class="code-lang">vue</span>
-            <button class="copy-btn" @click="copyCode('loading')">{{ copiedKey === 'loading' ? 'Copied!' : 'Copy' }}</button>
+            <button
+              class="copy-btn"
+              @click="copyCode('loading')"
+            >
+              {{ copiedKey === 'loading' ? 'Copied!' : 'Copy' }}
+            </button>
           </div>
           <pre><code>{{ code.loading }}</code></pre>
         </div>
@@ -1235,28 +1886,55 @@ const code = {
     <!-- ═══════════════════════════════════════════════════ -->
     <!-- EXAMPLE: STICKY HEADER -->
     <!-- ═══════════════════════════════════════════════════ -->
-    <section id="ex-sticky-header" class="doc-section">
+    <section
+      id="ex-sticky-header"
+      class="doc-section"
+    >
       <h2>Sticky Header</h2>
-      <p class="section-desc">Add <code>sticky-header</code> to keep the <code>&lt;thead&gt;</code> pinned while scrolling. Wrap in a fixed-height container.</p>
+      <p class="section-desc">
+        Add <code>sticky-header</code> to keep the <code>&lt;thead&gt;</code> pinned while scrolling. Wrap in a fixed-height container.
+      </p>
       <div class="example-split">
         <div class="example-preview">
           <div class="sticky-header-container">
-            <SlotTable :rows="employees" table-class="demo-table" sticky-header striped hoverable>
+            <SlotTable
+              :rows="employees"
+              table-class="demo-table"
+              sticky-header
+              striped
+              hoverable
+            >
               <SlotTableColumn>
-                <template #header>Name</template>
-                <template #cell="{ row }">{{ row.name }}</template>
+                <template #header>
+                  Name
+                </template>
+                <template #cell="{ row }">
+                  {{ row.name }}
+                </template>
               </SlotTableColumn>
               <SlotTableColumn align="center">
-                <template #header>Age</template>
-                <template #cell="{ row }">{{ row.age }}</template>
+                <template #header>
+                  Age
+                </template>
+                <template #cell="{ row }">
+                  {{ row.age }}
+                </template>
               </SlotTableColumn>
               <SlotTableColumn>
-                <template #header>Department</template>
-                <template #cell="{ row }">{{ row.department }}</template>
+                <template #header>
+                  Department
+                </template>
+                <template #cell="{ row }">
+                  {{ row.department }}
+                </template>
               </SlotTableColumn>
               <SlotTableColumn align="right">
-                <template #header>Salary</template>
-                <template #cell="{ row }">{{ currency(row.salary) }}</template>
+                <template #header>
+                  Salary
+                </template>
+                <template #cell="{ row }">
+                  {{ currency(row.salary) }}
+                </template>
               </SlotTableColumn>
             </SlotTable>
           </div>
@@ -1264,7 +1942,12 @@ const code = {
         <div class="example-code">
           <div class="code-toolbar">
             <span class="code-lang">vue</span>
-            <button class="copy-btn" @click="copyCode('stickyHeader')">{{ copiedKey === 'stickyHeader' ? 'Copied!' : 'Copy' }}</button>
+            <button
+              class="copy-btn"
+              @click="copyCode('stickyHeader')"
+            >
+              {{ copiedKey === 'stickyHeader' ? 'Copied!' : 'Copy' }}
+            </button>
           </div>
           <pre><code>{{ code.stickyHeader }}</code></pre>
         </div>
@@ -1274,33 +1957,62 @@ const code = {
     <!-- ═══════════════════════════════════════════════════ -->
     <!-- EXAMPLE: CELL CLICK -->
     <!-- ═══════════════════════════════════════════════════ -->
-    <section id="ex-cell-click" class="doc-section">
+    <section
+      id="ex-cell-click"
+      class="doc-section"
+    >
       <h2>Cell Click</h2>
-      <p class="section-desc">Handle individual cell clicks with <code>@cell-click</code>. Receives <code>(rowIndex, columnIndex, row)</code>.</p>
+      <p class="section-desc">
+        Handle individual cell clicks with <code>@cell-click</code>. Receives <code>(rowIndex, columnIndex, row)</code>.
+      </p>
       <div class="example-split">
         <div class="example-preview">
-          <div v-if="clickedCell" class="click-banner">
+          <div
+            v-if="clickedCell"
+            class="click-banner"
+          >
             Clicked cell [{{ clickedCell.rowIndex }}, {{ clickedCell.columnIndex }}]: <strong>{{ clickedCell.value }}</strong>
           </div>
-          <SlotTable :rows="employees.slice(0, 4)" table-class="demo-table" @cell-click="onCellClick">
+          <SlotTable
+            :rows="employees.slice(0, 4)"
+            table-class="demo-table"
+            @cell-click="onCellClick"
+          >
             <SlotTableColumn>
-              <template #header>Name</template>
-              <template #cell="{ row }"><span class="clickable-cell">{{ row.name }}</span></template>
+              <template #header>
+                Name
+              </template>
+              <template #cell="{ row }">
+                <span class="clickable-cell">{{ row.name }}</span>
+              </template>
             </SlotTableColumn>
             <SlotTableColumn>
-              <template #header>Role</template>
-              <template #cell="{ row }">{{ row.role }}</template>
+              <template #header>
+                Role
+              </template>
+              <template #cell="{ row }">
+                {{ row.role }}
+              </template>
             </SlotTableColumn>
             <SlotTableColumn>
-              <template #header>Department</template>
-              <template #cell="{ row }">{{ row.department }}</template>
+              <template #header>
+                Department
+              </template>
+              <template #cell="{ row }">
+                {{ row.department }}
+              </template>
             </SlotTableColumn>
           </SlotTable>
         </div>
         <div class="example-code">
           <div class="code-toolbar">
             <span class="code-lang">vue</span>
-            <button class="copy-btn" @click="copyCode('cellClick')">{{ copiedKey === 'cellClick' ? 'Copied!' : 'Copy' }}</button>
+            <button
+              class="copy-btn"
+              @click="copyCode('cellClick')"
+            >
+              {{ copiedKey === 'cellClick' ? 'Copied!' : 'Copy' }}
+            </button>
           </div>
           <pre><code>{{ code.cellClick }}</code></pre>
         </div>
@@ -1310,9 +2022,14 @@ const code = {
     <!-- ═══════════════════════════════════════════════════ -->
     <!-- EXAMPLE: CAPTION -->
     <!-- ═══════════════════════════════════════════════════ -->
-    <section id="ex-caption" class="doc-section">
+    <section
+      id="ex-caption"
+      class="doc-section"
+    >
       <h2>Table Caption</h2>
-      <p class="section-desc">Improve accessibility with a <code>caption</code> prop. Renders a proper <code>&lt;caption&gt;</code> element.</p>
+      <p class="section-desc">
+        Improve accessibility with a <code>caption</code> prop. Renders a proper <code>&lt;caption&gt;</code> element.
+      </p>
       <div class="example-split">
         <div class="example-preview">
           <SlotTable
@@ -1323,23 +2040,40 @@ const code = {
             striped
           >
             <SlotTableColumn>
-              <template #header>Name</template>
-              <template #cell="{ row }">{{ row.name }}</template>
+              <template #header>
+                Name
+              </template>
+              <template #cell="{ row }">
+                {{ row.name }}
+              </template>
             </SlotTableColumn>
             <SlotTableColumn>
-              <template #header>Role</template>
-              <template #cell="{ row }">{{ row.role }}</template>
+              <template #header>
+                Role
+              </template>
+              <template #cell="{ row }">
+                {{ row.role }}
+              </template>
             </SlotTableColumn>
             <SlotTableColumn>
-              <template #header>Department</template>
-              <template #cell="{ row }">{{ row.department }}</template>
+              <template #header>
+                Department
+              </template>
+              <template #cell="{ row }">
+                {{ row.department }}
+              </template>
             </SlotTableColumn>
           </SlotTable>
         </div>
         <div class="example-code">
           <div class="code-toolbar">
             <span class="code-lang">vue</span>
-            <button class="copy-btn" @click="copyCode('caption')">{{ copiedKey === 'caption' ? 'Copied!' : 'Copy' }}</button>
+            <button
+              class="copy-btn"
+              @click="copyCode('caption')"
+            >
+              {{ copiedKey === 'caption' ? 'Copied!' : 'Copy' }}
+            </button>
           </div>
           <pre><code>{{ code.caption }}</code></pre>
         </div>
@@ -1349,9 +2083,14 @@ const code = {
     <!-- ═══════════════════════════════════════════════════ -->
     <!-- API: SLOTTABLE -->
     <!-- ═══════════════════════════════════════════════════ -->
-    <section id="api-slottable" class="doc-section">
+    <section
+      id="api-slottable"
+      class="doc-section"
+    >
       <h2>SlotTable</h2>
-      <p class="section-desc">The main table component. Accepts rows and renders columns defined as children.</p>
+      <p class="section-desc">
+        The main table component. Accepts rows and renders columns defined as children.
+      </p>
 
       <h3>Props</h3>
       <div class="api-table-wrap">
@@ -1406,9 +2145,14 @@ const code = {
     <!-- ═══════════════════════════════════════════════════ -->
     <!-- API: SLOTTABLECOLUMN -->
     <!-- ═══════════════════════════════════════════════════ -->
-    <section id="api-column" class="doc-section">
+    <section
+      id="api-column"
+      class="doc-section"
+    >
       <h2>SlotTableColumn</h2>
-      <p class="section-desc">Renderless component that defines a single column. Must be a direct child of <code>&lt;SlotTable&gt;</code>.</p>
+      <p class="section-desc">
+        Renderless component that defines a single column. Must be a direct child of <code>&lt;SlotTable&gt;</code>.
+      </p>
 
       <h3>Props</h3>
       <div class="api-table-wrap">
@@ -1446,9 +2190,14 @@ const code = {
     <!-- ═══════════════════════════════════════════════════ -->
     <!-- API: SLOTTABLECOLUMNGROUP -->
     <!-- ═══════════════════════════════════════════════════ -->
-    <section id="api-columngroup" class="doc-section">
+    <section
+      id="api-columngroup"
+      class="doc-section"
+    >
       <h2>SlotTableColumnGroup</h2>
-      <p class="section-desc">Renderless component for grouped header rows. Must be a direct child of <code>&lt;SlotTable&gt;</code>.</p>
+      <p class="section-desc">
+        Renderless component for grouped header rows. Must be a direct child of <code>&lt;SlotTable&gt;</code>.
+      </p>
 
       <h3>Props</h3>
       <div class="api-table-wrap">
@@ -1479,9 +2228,14 @@ const code = {
     <!-- ═══════════════════════════════════════════════════ -->
     <!-- API: CELL SLOT SCOPE -->
     <!-- ═══════════════════════════════════════════════════ -->
-    <section id="api-cellscope" class="doc-section">
+    <section
+      id="api-cellscope"
+      class="doc-section"
+    >
       <h2>Cell Slot Scope</h2>
-      <p class="section-desc">The <code>#cell</code> scoped slot receives the following properties:</p>
+      <p class="section-desc">
+        The <code>#cell</code> scoped slot receives the following properties:
+      </p>
 
       <div class="api-table-wrap">
         <table class="api-table">
@@ -1497,7 +2251,9 @@ const code = {
       </div>
 
       <h3>CSS Classes Reference</h3>
-      <p class="section-desc">The component applies these classes that you can style:</p>
+      <p class="section-desc">
+        The component applies these classes that you can style:
+      </p>
       <div class="api-table-wrap">
         <table class="api-table">
           <thead>
@@ -1533,7 +2289,6 @@ const code = {
         MIT License
       </p>
     </footer>
-
   </main>
 </template>
 

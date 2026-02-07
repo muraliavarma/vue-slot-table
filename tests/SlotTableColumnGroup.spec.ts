@@ -1,9 +1,20 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { h } from 'vue'
-import { SlotTable, SlotTableColumn, SlotTableColumnGroup } from '@/index.js'
+import { SlotTable, SlotTableColumn, SlotTableColumnGroup } from '@/index'
 
-function createTableWithGroups(groups, columns = [{ header: 'Col', cell: () => 'x' }]) {
+interface GroupConfig {
+  label: string
+  sticky?: string
+  colspan?: number
+}
+
+interface ColumnConfig {
+  header: string
+  cell?: (row: any) => any
+}
+
+function createTableWithGroups(groups: GroupConfig[], columns: ColumnConfig[] = [{ header: 'Col', cell: () => 'x' }]) {
   return mount(SlotTable, {
     props: {
       rows: [{ val: 'test' }],
@@ -14,12 +25,12 @@ function createTableWithGroups(groups, columns = [{ header: 'Col', cell: () => '
           h(SlotTableColumnGroup, {
             sticky: group.sticky,
             colspan: group.colspan,
-          }, { default: () => group.label })
+          } as any, { default: () => group.label })
         ),
         ...columns.map((col) =>
           h(SlotTableColumn, {}, {
             header: () => col.header,
-            cell: ({ row }) => (col.cell ? col.cell(row) : row.val),
+            cell: ({ row }: { row: any }) => (col.cell ? col.cell(row) : row.val),
           })
         ),
       ],

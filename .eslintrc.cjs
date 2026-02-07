@@ -18,4 +18,18 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'vue/multi-word-component-names': 'off',
   },
+  overrides: [
+    {
+      files: ['*.ts', '*.vue'],
+      parser: 'vue-eslint-parser',
+      parserOptions: {
+        parser: {
+          ts: '@typescript-eslint/parser',
+        },
+      },
+      rules: {
+        'no-unused-vars': 'off',
+      },
+    },
+  ],
 }

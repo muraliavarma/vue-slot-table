@@ -1,9 +1,35 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { h } from 'vue'
-import { SlotTable, SlotTableColumn, SlotTableColumnGroup } from '@/index.js'
+import { SlotTable, SlotTableColumn, SlotTableColumnGroup } from '@/index'
+import type { CellSlotScope } from '@/types'
 
-function createTable(options = {}) {
+interface CreateTableOptions {
+  rows?: any[]
+  tableClass?: string
+  columnGroups?: Array<{ label: string; sticky?: string; colspan?: number }>
+  columns?: Array<{ header: string; cell: (scope: CellSlotScope) => any }>
+  sticky?: Record<number, string>
+  align?: Record<number, string>
+  width?: Record<number, string>
+  minWidth?: Record<number, string>
+  visible?: Record<number, boolean>
+  tdClass?: Record<number, string | Record<string, boolean>>
+  thClass?: Record<number, string | Record<string, boolean>>
+  footer?: Record<number, string>
+  rowKey?: string | ((row: any, index: number) => string | number)
+  rowClass?: string | Record<string, boolean> | ((row: any, index: number) => string | Record<string, boolean>)
+  striped?: boolean
+  hoverable?: boolean
+  bordered?: boolean
+  loading?: boolean
+  stickyHeader?: boolean
+  caption?: string
+  emptySlot?: string
+  loadingSlot?: string
+}
+
+function createTable(options: CreateTableOptions = {}) {
   const {
     rows = [
       { id: 1, name: 'Alice', age: 28 },
@@ -12,8 +38,8 @@ function createTable(options = {}) {
     tableClass,
     columnGroups = [],
     columns = [
-      { header: 'Name', cell: ({ row }) => row.name },
-      { header: 'Age', cell: ({ row }) => row.age },
+      { header: 'Name', cell: ({ row }: CellSlotScope) => row.name },
+      { header: 'Age', cell: ({ row }: CellSlotScope) => row.age },
     ],
     sticky = {},
     align = {},
@@ -35,7 +61,7 @@ function createTable(options = {}) {
     loadingSlot,
   } = options
 
-  const props = { rows }
+  const props: Record<string, any> = { rows }
   if (tableClass) props.tableClass = tableClass
   if (rowKey) props.rowKey = rowKey
   if (rowClass) props.rowClass = rowClass
@@ -46,16 +72,16 @@ function createTable(options = {}) {
   if (stickyHeader) props.stickyHeader = stickyHeader
   if (caption) props.caption = caption
 
-  const slots = {
+  const slots: Record<string, () => any> = {
     default: () => [
       ...columnGroups.map((group) =>
         h(SlotTableColumnGroup, {
           sticky: group.sticky,
           colspan: group.colspan,
-        }, { default: () => group.label })
+        } as any, { default: () => group.label })
       ),
       ...columns.map((col, i) => {
-        const colProps = {
+        const colProps: Record<string, any> = {
           sticky: sticky[i],
           align: align[i],
           width: width[i],
@@ -65,13 +91,13 @@ function createTable(options = {}) {
         if (tdClass[i]) colProps.tdClass = tdClass[i]
         if (thClass[i]) colProps.thClass = thClass[i]
 
-        const colSlots = {
+        const colSlots: Record<string, Function> = {
           header: () => col.header,
-          cell: (scope) => col.cell(scope),
+          cell: (scope: CellSlotScope) => col.cell(scope),
         }
         if (footer[i]) colSlots.footer = () => footer[i]
 
-        return h(SlotTableColumn, colProps, colSlots)
+        return h(SlotTableColumn, colProps as any, colSlots)
       }),
     ],
   }
@@ -83,7 +109,7 @@ function createTable(options = {}) {
     slots.loading = () => loadingSlot
   }
 
-  return mount(SlotTable, { props, slots })
+  return mount(SlotTable, { props: props as any, slots })
 }
 
 describe('SlotTable', () => {
@@ -138,14 +164,14 @@ describe('SlotTable', () => {
     const wrapper = createTable()
     await wrapper.findAll('tbody tr')[1].trigger('click')
     expect(wrapper.emitted('row-click')).toBeTruthy()
-    expect(wrapper.emitted('row-click')[0]).toEqual([1, { id: 2, name: 'Bob', age: 34 }])
+    expect(wrapper.emitted('row-click')![0]).toEqual([1, { id: 2, name: 'Bob', age: 34 }])
   })
 
   it('emits header-click with column index when header is clicked', async () => {
     const wrapper = createTable()
     await wrapper.findAll('thead th')[1].trigger('click')
     expect(wrapper.emitted('header-click')).toBeTruthy()
-    expect(wrapper.emitted('header-click')[0]).toEqual([1])
+    expect(wrapper.emitted('header-click')![0]).toEqual([1])
   })
 
   it('handles empty rows with no empty slot', () => {
@@ -181,13 +207,13 @@ describe('SlotTable', () => {
   })
 
   it('passes row, rowIndex, and columnIndex to cell slot', () => {
-    const cellArgs = []
+    const cellArgs: CellSlotScope[] = []
     createTable({
       rows: [{ id: 1, name: 'Test' }],
       columns: [
         {
           header: 'Col',
-          cell: (scope) => {
+          cell: (scope: CellSlotScope) => {
             cellArgs.push({ ...scope })
             return scope.row.name
           },
@@ -233,7 +259,7 @@ describe('SlotTable', () => {
 
   it('applies rowClass as a function', () => {
     const wrapper = createTable({
-      rowClass: (row) => row.name === 'Alice' ? 'highlighted' : '',
+      rowClass: (row: any) => row.name === 'Alice' ? 'highlighted' : '',
     })
     const rows = wrapper.findAll('tbody tr')
     expect(rows[0].classes()).toContain('highlighted')
@@ -355,7 +381,7 @@ describe('SlotTable', () => {
     const wrapper = createTable()
     await wrapper.findAll('tbody td')[1].trigger('click')
     expect(wrapper.emitted('cell-click')).toBeTruthy()
-    expect(wrapper.emitted('cell-click')[0]).toEqual([0, 1, { id: 1, name: 'Alice', age: 28 }])
+    expect(wrapper.emitted('cell-click')![0]).toEqual([0, 1, { id: 1, name: 'Alice', age: 28 }])
   })
 
   // ── tdClass and thClass props ─────────────────────

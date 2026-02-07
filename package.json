@@ -1,14 +1,16 @@
 {
   "name": "vue-slottable",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "A flexible, slot-based Vue 3 table component with sticky columns, column groups, and scoped slots for custom cell rendering.",
-  "main": "./dist/vue-slottable.umd.js",
-  "module": "./dist/vue-slottable.mjs",
-  "types": "./src/types.d.ts",
+  "type": "module",
+  "main": "./dist/vue-slottable.umd.cjs",
+  "module": "./dist/vue-slottable.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/vue-slottable.mjs",
-      "require": "./dist/vue-slottable.umd.js"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/vue-slottable.js",
+      "require": "./dist/vue-slottable.umd.cjs"
     }
   },
   "files": [
@@ -18,7 +20,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:lib": "vite build --mode lib",
+    "build:lib": "vite build --mode lib && vue-tsc -p tsconfig.build.json",
+    "typecheck": "vue-tsc --noEmit",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -29,14 +32,17 @@
     "vue": "^3.4.0"
   },
   "devDependencies": {
+    "@typescript-eslint/parser": "^8.54.0",
     "@vitejs/plugin-vue": "^5.1.0",
     "@vue/test-utils": "^2.4.0",
     "eslint": "^8.57.0",
     "eslint-plugin-vue": "^9.27.0",
     "jsdom": "^24.1.0",
+    "typescript": "^5.9.3",
     "vite": "^5.4.0",
     "vitest": "^2.0.0",
-    "vue": "^3.4.0"
+    "vue": "^3.4.0",
+    "vue-tsc": "^3.2.4"
   },
   "keywords": [
     "vue",
